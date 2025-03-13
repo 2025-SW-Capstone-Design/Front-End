@@ -1,6 +1,6 @@
 // TODO : API 인터셉터 구현
 import axios from 'axios';
-import { REISSUE } from '~/constants/endPoint';
+import { REISSUE } from '../../constants/endPoint';
 
 const apiClient = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL || 'http://localhost:8080',

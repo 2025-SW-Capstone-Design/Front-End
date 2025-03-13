@@ -9,16 +9,20 @@ import theme from './styles/theme';
 import { Global, ThemeProvider } from '@emotion/react';
 import globalStyles from './styles/globalStyle';
 import './App.css';
+import { ErrorBoundary } from 'react-error-boundary';
+import ErrorFallback from './components/common/ErrorFallback';
 
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
         <ThemeProvider theme={theme}>
-          <Suspense fallback={<div>Loading...</div>}>
-            <Global styles={globalStyles} />
-            <RouterProvider router={router} />
-          </Suspense>
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Global styles={globalStyles} />
+              <RouterProvider router={router} />
+            </Suspense>
+          </ErrorBoundary>
         </ThemeProvider>
       </RecoilRoot>
     </QueryClientProvider>
