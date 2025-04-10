@@ -164,6 +164,10 @@ export const LoginButton = styled.button`
   justify-content: center;
   align-items: center;
   color: white;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.primary[30]};
+  }
 `;
 
 export const LoginFooterText = styled.div`
