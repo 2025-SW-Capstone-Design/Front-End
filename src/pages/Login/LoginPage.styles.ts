@@ -176,6 +176,7 @@ export const LoginFooterText = styled.div`
   align-items: center;
   justify-content: center;
   margin-top: 12px;
+  gap: 4px;
   p {
     color: #a0aec0;
     ${({ theme }) => theme.text.labelM_medium};
