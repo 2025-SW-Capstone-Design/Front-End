@@ -31,7 +31,7 @@ export const NoiseOverlay = styled.div`
   position: absolute;
   width: 600px;
   height: 100vw;
-  background-image: url(${noise_texture}); // ✅ 실제 경로로!
+  background-image: url(${noise_texture});
   background-size: cover;
   background-position: center;
   opacity: 0.3;
