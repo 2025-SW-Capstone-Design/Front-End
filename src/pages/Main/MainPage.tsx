@@ -2,8 +2,14 @@ import React from 'react';
 import * as S from './MainPage.styles';
 import logo from '../../assets/logo_black.svg';
 import logo_column from '../../assets/logo_black_column.svg';
+import { useNavigate } from 'react-router-dom';
 
 const MainPage = () => {
+  const navigate = useNavigate();
+
+  const handleStartButtonClick = () => {
+    navigate('/login');
+  };
   return (
     <>
       <S.Header>
@@ -17,7 +23,9 @@ const MainPage = () => {
         <S.MainContent>
           <S.Logo src={logo_column} alt="로고" />
           <S.Footer>
-            <S.StartButton>시작하기</S.StartButton>
+            <S.StartButton onClick={handleStartButtonClick}>
+              시작하기
+            </S.StartButton>
             <S.FooterText>시작하기 버튼을 눌러 로그인해보세요!</S.FooterText>
           </S.Footer>
         </S.MainContent>
