@@ -3,7 +3,6 @@ import { css } from '@emotion/react';
 import type { ButtonStylesProps } from './Button.types';
 
 const ButtonLayout = css`
-  width: 228px;
   height: 44px;
   flex-shrink: 0;
   padding: 12px 24px;
