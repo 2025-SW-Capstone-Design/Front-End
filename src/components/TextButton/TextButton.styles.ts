@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-const TextButton = styled.button`
+const PrimaryTextButton = styled.button`
   cursor: pointer;
   ${({ theme }) => theme.text.bodyM_bold};
   color: ${({ theme }) => theme.colors.primary[40]};
@@ -15,4 +15,19 @@ const TextButton = styled.button`
   }
 `;
 
-export { TextButton };
+const SecondaryTextButton = styled.button`
+  cursor: pointer;
+  ${({ theme }) => theme.text.bodyL_bold};
+  color: ${({ theme }) => theme.colors.gray[70]};
+  width: auto;
+  height: 22px;
+  display: flex;
+  text-align: center;
+
+  &:hover,
+  &:active {
+    color: ${({ theme }) => theme.colors.gray[80]};
+  }
+`;
+
+export { PrimaryTextButton, SecondaryTextButton };
