@@ -4,9 +4,10 @@ const TextButton = styled.button`
   cursor: pointer;
   ${({ theme }) => theme.text.bodyM_bold};
   color: ${({ theme }) => theme.colors.primary[40]};
-  line-height: 20px;
   width: auto;
-  height: auto;
+  height: 20px;
+  display: flex;
+  text-align: center;
 
   &:hover,
   &:active {
