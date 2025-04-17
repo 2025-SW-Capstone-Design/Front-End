@@ -7,6 +7,7 @@ function TextIconButton({
   buttonType,
   children,
   icon: Icon,
+  iconPosition = 'left', //기본 값 left
   ...props
 }: TextIconButtonProps) {
   switch (buttonType) {
@@ -14,8 +15,9 @@ function TextIconButton({
       return (
         <S.TextIconPrimaryButton {...props}>
           <S.TextIconButtonContent>
-            {Icon && <Icon />}
+            {iconPosition === 'left' && Icon && <Icon />}
             <TextButton buttonType="primary">{children}</TextButton>
+            {iconPosition === 'right' && Icon && <Icon />}
           </S.TextIconButtonContent>
         </S.TextIconPrimaryButton>
       );
@@ -23,8 +25,9 @@ function TextIconButton({
       return (
         <S.TextIconSecondaryButton {...props}>
           <S.TextIconButtonContent>
-            {Icon && <Icon />}
+            {iconPosition === 'left' && Icon && <Icon />}
             <TextButton buttonType="secondary">{children}</TextButton>
+            {iconPosition === 'right' && Icon && <Icon />}
           </S.TextIconButtonContent>
         </S.TextIconSecondaryButton>
       );

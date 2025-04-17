@@ -5,6 +5,7 @@ interface TextIconButtonProps
   children: React.ReactNode;
   buttonType: 'primary' | 'secondary';
   icon?: ComponentType;
+  iconPosition?: 'left' | 'right';
 }
 
 export { TextIconButtonProps };
