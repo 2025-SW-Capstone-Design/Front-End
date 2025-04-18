@@ -8,6 +8,7 @@ const ButtonLayout = css`
   padding: 10px 24px;
   border-radius: 8px;
   text-align: center;
+  white-space: nowrap;
   cursor: pointer;
 `;
 
