@@ -11,7 +11,7 @@ const InputLayout = css`
   border: none;
 `;
 const InputContainer = styled.div`
-  max-width: 342px;
+  width: 100%;
 `;
 
 const InputWrapper = styled.input<InputStylesProps & { status?: string }>`
