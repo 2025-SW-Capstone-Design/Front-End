@@ -12,6 +12,10 @@ interface LabelProps {
   position: PositionType;
 }
 
+interface DropdownLabelMenuProps {
+  onSelect: (position: PositionType) => void; // 선택된 값을 전달하는 콜백
+}
+
 type PositionType =
   | 'NONE'
   | 'BACKEND'
@@ -137,4 +141,10 @@ const Positions: Record<string, PositionInfo> = {
   },
 };
 
-export { PositionInfo, Positions, PositionType, LabelProps };
+export {
+  PositionInfo,
+  Positions,
+  PositionType,
+  LabelProps,
+  DropdownLabelMenuProps,
+};
