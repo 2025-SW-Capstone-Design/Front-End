@@ -97,7 +97,7 @@ function CreateTeamModal() {
             </S.InputContainer>
           </S.ModalContent>
           <S.ModalFooter>
-            <Button buttonType="tertiary" width="120px">
+            <Button buttonType="soft" width="120px">
               취소
             </Button>
             <IconButton buttonType="primary" width="120px">
