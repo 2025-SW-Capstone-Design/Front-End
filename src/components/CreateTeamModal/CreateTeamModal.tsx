@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ModalPortal from '../Modal/ModalPortal';
 import * as S from './CreateTeamModal.styles';
 import Input from '../Input/Input';
@@ -6,8 +6,43 @@ import TextArea from '../TextArea/TextArea';
 import Button from '../Button/Button';
 import IconButton from '../IconButton/IconButton';
 import EmailTag from '../EmailTag/EmailTag';
+import { isValidEmail } from '../../utils/emailValidation';
 
 function CreateTeamModal() {
+  const [emails, setEmails] = useState<string[]>([]);
+  const [emailInput, setEmailInput] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [emailStatus, setEmailStatus] = useState<
+    'default' | 'error' | 'success'
+  >('default');
+
+  const handleAddEmail = () => {
+    const validation = isValidEmail(emailInput);
+
+    if (!validation.isValid) {
+      setErrorMessage(validation.message || '유효하지 않은 이메일입니다.');
+      setEmailStatus('error');
+      return;
+    }
+
+    if (emails.includes(emailInput)) {
+      setErrorMessage('이미 추가된 이메일입니다.');
+      setEmailStatus('error');
+      return;
+    }
+
+    setEmails((prevEmails) => [...prevEmails, emailInput]);
+    setEmailInput('');
+    setErrorMessage('');
+    setEmailStatus('success');
+  };
+
+  const handleRemove = (emailToRemove: string) => {
+    setEmails((prevEmails) =>
+      prevEmails.filter((email) => email !== emailToRemove),
+    );
+  };
+
   return (
     <ModalPortal>
       <S.ModalBackground>
@@ -40,12 +75,24 @@ function CreateTeamModal() {
             </S.InputContainer>
             <S.InputContainer>
               <S.InputLabel>팀원 초대 (이메일)</S.InputLabel>
-              <Input width="100%" />
+              <Input
+                width="100%"
+                value={emailInput}
+                status={emailStatus}
+                message={errorMessage}
+                onChange={(e) => setEmailInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleAddEmail(); // Enter 키로 추가
+                }}
+              />
               <S.EmailTagContainer>
-                <EmailTag></EmailTag>
-                <EmailTag></EmailTag>
-                <EmailTag></EmailTag>
-                <EmailTag></EmailTag>
+                {emails.map((email) => (
+                  <EmailTag
+                    key={email}
+                    email={email}
+                    onRemove={() => handleRemove(email)}
+                  />
+                ))}
               </S.EmailTagContainer>
             </S.InputContainer>
           </S.ModalContent>
