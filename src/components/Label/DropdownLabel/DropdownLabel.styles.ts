@@ -5,7 +5,7 @@ import { Positions } from '../Label.types';
 
 const DropdownLabelWrapper = styled.div`
   position: relative;
-  display: inline-block;
+  display: flex;
 `;
 
 const DropdownLabelContainer = styled.button<{ position: PositionType }>`
