@@ -4,11 +4,11 @@ const PrimaryTextButton = styled.button`
   cursor: pointer;
   ${({ theme }) => theme.text.bodyM_bold};
   color: ${({ theme }) => theme.colors.primary[40]};
-  width: auto;
+  width: fit-content;
   height: 20px;
   display: flex;
   text-align: center;
-
+  flex-shrink: 0;
   &:hover,
   &:active {
     color: ${({ theme }) => theme.colors.primary[30]};

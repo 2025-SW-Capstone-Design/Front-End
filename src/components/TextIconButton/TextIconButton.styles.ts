@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 const TextIconButtonLayout = css`
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 `;
 const TextIconPrimaryButton = styled.button`
   ${TextIconButtonLayout};
