@@ -14,6 +14,8 @@ interface LabelProps {
 
 interface DropdownLabelMenuProps {
   onSelect: (position: PositionType) => void; // 선택된 값을 전달하는 콜백
+  top: number; // 드롭다운 메뉴의 top 위치
+  left: number; // 드롭다운 메뉴의 left 위치
 }
 
 type PositionType =

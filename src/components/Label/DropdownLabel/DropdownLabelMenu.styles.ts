@@ -6,16 +6,14 @@ const DropdownLabelWrapper = styled.div`
 `;
 
 const DropdownLabelMenu = styled.ul`
-  position: absolute;
-  top: 130%;
-  left: 0;
+  position: fixed;
   padding: 10px;
   height: 216px;
   overflow-y: auto;
   background-color: white;
   border-radius: 12px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-  z-index: 100;
+  z-index: 6000;
 
   scrollbar-width: none; //Firefox에서 스크롤바 숨기기
   -ms-overflow-style: none; // IE에서 스크롤바 숨기기
