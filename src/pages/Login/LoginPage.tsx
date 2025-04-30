@@ -6,9 +6,9 @@ import github from '../../assets/github.svg';
 // NOTE 슬로건, url은 추후에 변경될 예정
 // NOTE 서비스 소개, 기능안내, HOME 버튼은 페이지 추가 후 연결 예정
 function LoginPage() {
-  const BaseURL = process.env.BASE_URL ?? '';
+  const BASE_URL = process.env.REACT_APP_BASE_URL ?? 'http://localhost:8080';
   const handleLoginClick = () => {
-    window.location.href = BaseURL + '/oauth2/authorization/github';
+    window.location.href = BASE_URL + '/oauth2/authorization/github';
   };
 
   const handleGithubButtonClick = () => {
