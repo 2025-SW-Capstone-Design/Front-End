@@ -6,12 +6,13 @@ function EventContainer({
   containerType,
   taskName,
   time,
+  position,
   ...props
 }: EventContainerProps) {
   switch (containerType) {
     case 'small':
       return (
-        <S.SmallEventWrapper {...props}>
+        <S.SmallEventWrapper position={position} {...props}>
           <S.TaskNameWrapper>
             <S.Task containerType="small">{taskName}</S.Task>
           </S.TaskNameWrapper>
@@ -22,7 +23,7 @@ function EventContainer({
       );
     case 'medium':
       return (
-        <S.MediumEventWrapper {...props}>
+        <S.MediumEventWrapper position={position} {...props}>
           <S.TaskNameWrapper>
             <S.Task containerType="medium">{taskName}</S.Task>
           </S.TaskNameWrapper>
@@ -33,7 +34,7 @@ function EventContainer({
       );
     case 'large':
       return (
-        <S.LargerEventWrapper {...props}>
+        <S.LargerEventWrapper position={position} {...props}>
           <S.TaskNameWrapper>
             <S.Task containerType="large">{taskName}</S.Task>
           </S.TaskNameWrapper>
