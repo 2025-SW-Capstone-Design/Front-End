@@ -1,7 +1,7 @@
 interface IconButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  buttonType: 'primary' | 'secondary';
+  buttonType: 'primary' | 'secondary' | 'tertiary';
   width?: string;
 }
 

@@ -21,6 +21,13 @@ function IconButton({ buttonType, children, ...props }: IconButtonProps) {
           <S.iconButtonContent>{children}</S.iconButtonContent>
         </S.iconSecondaryButton>
       );
+    case 'tertiary':
+      return (
+        <S.iconTertiaryButton {...props}>
+          <S.iconButtonContent>{children}</S.iconButtonContent>
+        </S.iconTertiaryButton>
+      );
+
     default:
       return null;
   }

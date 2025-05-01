@@ -38,6 +38,19 @@ const iconSecondaryButton = styled.button<IconButtonStylesProps>`
   }
 `;
 
+const iconTertiaryButton = styled.button<IconButtonStylesProps>`
+  ${ButtonLayout};
+
+  width: ${({ width }) => width || '228px'};
+  background: ${({ theme }) => theme.colors.primary[40]};
+  color: white;
+
+  &:hover,
+  &:active {
+    background: ${({ theme }) => theme.colors.primary[30]};
+  }
+`;
+
 const iconButtonContent = styled.div`
   display: flex;
   align-items: flex-end;
@@ -53,4 +66,9 @@ const iconButtonContent = styled.div`
   }
 `;
 
-export { iconPrimaryButton, iconSecondaryButton, iconButtonContent };
+export {
+  iconPrimaryButton,
+  iconSecondaryButton,
+  iconTertiaryButton,
+  iconButtonContent,
+};
