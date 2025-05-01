@@ -11,9 +11,14 @@ const LabelLayout = css`
   border-radius: 24px;
   text-align: center;
   border: none;
+  cursor: pointer;
 `;
 
-const LabelContainer = styled.div<{ position: PositionType }>`
+const LabelContainer = styled.div<{
+  position: PositionType;
+  isSelected?: boolean;
+  isClickable?: boolean;
+}>`
   ${LabelLayout};
 
   ${({ theme }) => theme.text.bodyS_bold};
@@ -21,6 +26,11 @@ const LabelContainer = styled.div<{ position: PositionType }>`
   outline: 1px solid
     ${({ theme, position }) => Positions[position].outline(theme)};
   color: ${({ theme, position }) => Positions[position].color(theme)};
+
+  opacity: ${({ isClickable, isSelected }) =>
+    isClickable ? (isSelected ? 1 : 0.5) : 1};
+
+  pointer-events: ${({ isClickable }) => (isClickable ? 'auto' : 'none')};
 `;
 
 export { LabelLayout, LabelContainer };
