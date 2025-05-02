@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 
 const TemplateCardWrapper = styled.div`
-  width: 296px;
+  width: 289px;
   height: 210px;
   padding: 12px 16px;
   border-radius: 8px;
@@ -17,12 +17,25 @@ const TemplateCardWrapper = styled.div`
     background-color: ${({ theme }) => theme.colors.gray[20]};
   }
 `;
+const TemplateCardHeader = styled.div`
+  width: 100%;
+  height: 24px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
 
 const TemplateCardTitle = styled.div`
   width: 100%;
   height: 20px;
   color: black;
   ${({ theme }) => theme.text.bodyM_bold};
+`;
+
+const TemplateCardCheckbox = styled.button`
+  width: 24px;
+  height: 24px;
 `;
 
 const TemplateCardContent = styled.div`
@@ -63,7 +76,9 @@ const ButtonContainer = styled.div`
 
 export {
   TemplateCardWrapper,
+  TemplateCardHeader,
   TemplateCardTitle,
+  TemplateCardCheckbox,
   TemplateCardContent,
   TemplateCardContentText,
   TemplateCardLabels,
