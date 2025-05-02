@@ -11,8 +11,6 @@ function DropdownLabel({ position }: LabelProps) {
   const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  console.log(selectedPosition);
-
   const toggleDropdown = () => setIsOpen((prev) => !prev);
 
   const handleSelect = (newPosition: PositionType) => {
