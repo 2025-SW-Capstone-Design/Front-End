@@ -34,4 +34,19 @@ const MoreAvatar = styled.div`
   justify-content: center;
 `;
 
-export { AvatarGroupContainer, AvatarWrapper, AvatarImage, MoreAvatar };
+const Tooltip = styled.div`
+  position: absolute;
+  top: 35px;
+  right: -50px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+`;
+
+export {
+  AvatarGroupContainer,
+  AvatarWrapper,
+  AvatarImage,
+  MoreAvatar,
+  Tooltip,
+};

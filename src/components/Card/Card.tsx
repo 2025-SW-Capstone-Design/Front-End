@@ -35,12 +35,24 @@ function MilestoneCard({ cardType }: MilestoneCardProps) {
                     position: 'DESIGNER',
                   },
                   {
-                    name: '이정환 ',
-                    position: 'DESIGNER',
+                    name: '차영건 ',
+                    position: 'FRONTEND',
                   },
                   {
-                    name: '이정환 ',
-                    position: 'DESIGNER',
+                    name: '차차핑',
+                    position: 'DEVOPS',
+                  },
+                  {
+                    name: '차차차',
+                    position: 'BACKEND',
+                  },
+                  {
+                    name: '정연재',
+                    position: 'FULLSTACK',
+                  },
+                  {
+                    name: '정순재',
+                    position: 'BACKEND',
                   },
                 ]}
               />
