@@ -7,10 +7,12 @@ import TemplateCard from '../TemplateCard/TemplateCard';
 import pen from '../../assets/icon/pen.svg';
 import trash from '../../assets/icon/trash.svg';
 import type { PositionType } from '../Label/Label.types';
+import Modal from '../Modal/Modal';
 
 function ImportTemplateModal() {
   const [searchTemplate, setSearchTemplate] = useState<string>('');
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [templateData, setTemplateData] = useState([
     {
       id: 1,
@@ -70,10 +72,19 @@ function ImportTemplateModal() {
   };
 
   const handleDeleteButtonClick = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = () => {
     setTemplateData((prev) =>
       prev.filter((template) => !selectedTemplates.includes(template.id)),
     );
     setSelectedTemplates([]);
+    setIsDeleteModalOpen(false);
+  };
+
+  const cancelDelete = () => {
+    setIsDeleteModalOpen(false);
   };
 
   return (
@@ -140,6 +151,15 @@ function ImportTemplateModal() {
           </S.TemplateContainer>
         </S.ModalWrapper>
       </S.ModalBackground>
+      {isDeleteModalOpen && (
+        <Modal
+          title="Task 템플릿을 삭제하시겠습니까?"
+          leftButtonText="삭제"
+          rightButtonText="아니요"
+          onLeftButtonClick={confirmDelete}
+          onRightButtonClick={cancelDelete}
+        />
+      )}
     </ModalPortal>
   );
 }
