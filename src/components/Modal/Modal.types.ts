@@ -3,6 +3,8 @@ interface ModalProps extends React.HTMLAttributes<HTMLDivElement> {
   leftButtonText: string;
   rightButtonText: string;
   rightButtonIcon?: string;
+  onLeftButtonClick?: () => void;
+  onRightButtonClick?: () => void;
 }
 
 export { ModalProps };

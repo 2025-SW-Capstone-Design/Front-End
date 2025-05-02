@@ -10,6 +10,8 @@ function Modal({
   leftButtonText,
   rightButtonText,
   rightButtonIcon,
+  onLeftButtonClick,
+  onRightButtonClick,
 }: ModalProps) {
   return (
     <ModalPortal>
@@ -17,10 +19,14 @@ function Modal({
         <S.ModalWrapper>
           <S.ModalTitle>{title}</S.ModalTitle>
           <S.ButtonContainer>
-            <Button buttonType="soft" width="140px">
+            <Button buttonType="soft" width="140px" onClick={onLeftButtonClick}>
               {leftButtonText}
             </Button>
-            <IconButton buttonType="tertiary" width="140px">
+            <IconButton
+              buttonType="tertiary"
+              width="140px"
+              onClick={onRightButtonClick}
+            >
               {rightButtonIcon && <img src={rightButtonIcon} alt="" />}
               {rightButtonText}
             </IconButton>
