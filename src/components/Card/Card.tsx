@@ -1,32 +1,32 @@
 import React, { useState } from 'react';
 import * as S from './Card.styles';
-import type { MilestoneCardProps } from './Card.types';
+import type { CardProps } from './Card.types';
 import Label from '../Label/Label';
 import AvatarGroup from '../AvatarGroup/AvatarGroup';
 import TextIconButton from '../TextIconButton/TextIconButton';
 import { ReactComponent as arrow_right_small } from '../../assets/icon/arrow_right_small.svg';
 
-function MilestoneCard({ cardType }: MilestoneCardProps) {
+function Card({ cardType }: CardProps) {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <S.MilestoneCardContainer onClick={() => setIsOpen(!isOpen)}>
-      <S.MilestoneCardHeader>
-        <S.MilestoneCardStatus>진행전</S.MilestoneCardStatus>
-        <S.MilestoneCardTitle>로그인 페이지 UI 개선</S.MilestoneCardTitle>
-      </S.MilestoneCardHeader>
+    <S.CardContainer onClick={() => setIsOpen(!isOpen)}>
+      <S.CardHeader>
+        <S.CardStatus>진행전</S.CardStatus>
+        <S.CardTitle>로그인 페이지 UI 개선</S.CardTitle>
+      </S.CardHeader>
       {isOpen && (
         <>
-          <S.MilestoneCardContent>
-            <S.MilestoneCardContentText>참여 직군</S.MilestoneCardContentText>
-            <S.MilestoneCardLabels>
+          <S.CardContent>
+            <S.CardContentText>참여 직군</S.CardContentText>
+            <S.CardLabels>
               <Label position="FRONTEND" />
               <Label position="BACKEND" />
               <Label position="BACKEND" />
               <Label position="BACKEND" />
               <Label position="DESIGNER" />
-            </S.MilestoneCardLabels>
-          </S.MilestoneCardContent>
-          <S.MilestoneCardFooter>
+            </S.CardLabels>
+          </S.CardContent>
+          <S.CardFooter>
             <S.MemberAvatars>
               <AvatarGroup
                 members={[
@@ -70,11 +70,11 @@ function MilestoneCard({ cardType }: MilestoneCardProps) {
                 Task 보러가기
               </TextIconButton>
             )}
-          </S.MilestoneCardFooter>
+          </S.CardFooter>
         </>
       )}
-    </S.MilestoneCardContainer>
+    </S.CardContainer>
   );
 }
 
-export default MilestoneCard;
+export default Card;

@@ -1,7 +1,7 @@
 import type { PositionType } from '../Label/Label.types';
 
-interface MilestoneCardProps {
+interface CardProps {
   cardType: 'milestone' | 'task';
 }
 
-export { MilestoneCardProps };
+export { CardProps };

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-const MilestoneCardContainer = styled.div`
+const CardContainer = styled.div`
   width: 296px;
   min-height: 72px;
   display: flex;
@@ -18,7 +18,7 @@ const MilestoneCardContainer = styled.div`
   }
 `;
 
-const MilestoneCardHeader = styled.div`
+const CardHeader = styled.div`
   width: 100%;
   height: 48px;
   display: flex;
@@ -26,7 +26,7 @@ const MilestoneCardHeader = styled.div`
   gap: 8px;
 `;
 
-const MilestoneCardStatus = styled.div`
+const CardStatus = styled.div`
   width: 43px;
   height: 20px;
   background: ${({ theme }) => theme.colors.gray[90]};
@@ -36,13 +36,13 @@ const MilestoneCardStatus = styled.div`
   border-radius: 4px;
 `;
 
-const MilestoneCardTitle = styled.div`
+const CardTitle = styled.div`
   width: 100%;
   height: 20px;
   ${({ theme }) => theme.text.bodyM_bold};
 `;
 
-const MilestoneCardContent = styled.div`
+const CardContent = styled.div`
   width: 248px;
   height: auto;
   gap: 8px;
@@ -50,14 +50,14 @@ const MilestoneCardContent = styled.div`
   flex-direction: column;
 `;
 
-const MilestoneCardContentText = styled.div`
+const CardContentText = styled.div`
   width: 100%;
   height: 12px;
   ${({ theme }) => theme.text.labeS_bold};
   margin-top: 12px;
 `;
 
-const MilestoneCardLabels = styled.div`
+const CardLabels = styled.div`
   height: 64px;
   padding: 2px;
   overflow: auto;
@@ -70,7 +70,7 @@ const MilestoneCardLabels = styled.div`
   gap: 8px 4px;
 `;
 
-const MilestoneCardFooter = styled.div`
+const CardFooter = styled.div`
   width: 100%;
   height: auto;
   display: flex;
@@ -111,14 +111,14 @@ const Time = styled.div`
 `;
 
 export {
-  MilestoneCardContainer,
-  MilestoneCardHeader,
-  MilestoneCardStatus,
-  MilestoneCardTitle,
-  MilestoneCardContent,
-  MilestoneCardContentText,
-  MilestoneCardLabels,
-  MilestoneCardFooter,
+  CardContainer,
+  CardHeader,
+  CardStatus,
+  CardTitle,
+  CardContent,
+  CardContentText,
+  CardLabels,
+  CardFooter,
   MemberAvatars,
   DueDate,
   Date,
