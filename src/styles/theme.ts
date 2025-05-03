@@ -2,7 +2,7 @@ const theme = {
   colors: {
     gray: {
       10: '#F8F9FA',
-      20: '#F2F5F8',
+      20: '#EFF2F5',
       30: '#E9EFF4',
       40: '#DAE4EC',
       50: '#C4CDD4',
@@ -67,6 +67,18 @@ const theme = {
       80: '#299676',
       90: '#1B644F',
     },
+    orange: {
+      10: '#FFF1DD',
+      20: '#FFE7C6',
+      30: '#FFD79E',
+      40: '#FFBB5B',
+      50: '#FFAA50',
+      60: '#F38D1F',
+      70: '#C97720',
+      80: '#A35D12',
+      90: '#6A3700',
+    },
+
     system_red: {
       10: '#FFD8D7',
       20: '#FFB1AF',
