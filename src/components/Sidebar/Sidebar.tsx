@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import * as S from './Sidebar.styles';
 
 import SidebarLogo from '../../assets/logo_black_column.svg';
@@ -12,8 +12,19 @@ import IconButton from '../IconButton/IconButton';
 
 const Sidebar = () => {
   const naviate = useNavigate();
+  const { teamId } = useParams();
+
   const { data } = useApiQuery(getTeamList(), 'teams');
   const [selectedTeamId, setSelectedTeamId] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (teamId) {
+      const numericTeamId = Number(teamId);
+      if (!isNaN(numericTeamId)) {
+        setSelectedTeamId(numericTeamId);
+      }
+    }
+  }, [teamId]);
 
   const navigateTo = (route: string) => {
     naviate(route);
@@ -23,8 +34,6 @@ const Sidebar = () => {
     setSelectedTeamId(teamId);
     navigateTo(`/team/${teamId}`);
   };
-
-  console.log(selectedTeamId);
 
   return (
     <S.SidebarContainer>
