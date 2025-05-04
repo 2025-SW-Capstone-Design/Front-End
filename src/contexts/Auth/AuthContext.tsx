@@ -2,25 +2,31 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { AuthContextType, AuthProviderProps } from './AuthContext.types';
 
 const defaultContext: AuthContextType = {
-  accessToken: null,
   isAuthenticated: false,
+  isLoading: false,
 };
 const AuthContext = createContext<AuthContextType>(defaultContext);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const token = sessionStorage.getItem('accessToken');
-    if (token) {
-      setAccessToken(token);
-    }
+    const checkAuth = async () => {
+      const token = sessionStorage.getItem('accessToken');
+      if (token) {
+        setIsAuthenticated(true);
+      } else {
+        setIsAuthenticated(false);
+      }
+      setIsLoading(false);
+    };
+
+    checkAuth();
   }, []);
 
   return (
-    <AuthContext.Provider
-      value={{ accessToken, isAuthenticated: !!accessToken }}
-    >
+    <AuthContext.Provider value={{ isAuthenticated, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

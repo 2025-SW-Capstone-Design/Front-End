@@ -14,7 +14,11 @@ const ContentWrapper = styled.div`
 `;
 
 const ProtectedLayout = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <></>;
+  }
 
   if (!isAuthenticated) {
     return <Navigate to="/intro" replace />;
