@@ -7,58 +7,56 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use((config) => {
   const accessToken = sessionStorage.getItem('accessToken');
-  if (!accessToken) {
-    config.headers['accessToken'] = null;
-  } else {
+  if (accessToken) {
     config.headers['Authorization'] = `Bearer ${accessToken}`;
   }
   return config;
 });
 
 apiClient.interceptors.response.use(
-  function (response) {
-    return response;
-  },
-  async function (err) {
-    const originalConfig = err.config;
-    const reissueRequestDto = {
-      accessToken: sessionStorage.getItem('accessToken'),
-      refreshToken: sessionStorage.getItem('refreshToken'),
-    };
+  (response) => response,
+  async (error) => {
+    const originalConfig = error.config;
+
     if (
-      err.response.data.status === 401 &&
-      err.response.data.message === '유효하지 않은 토큰입니다.'
+      error.response &&
+      error.response.data &&
+      error.response.status === 401 &&
+      error.response.data.message === '유효하지 않은 토큰입니다.'
     ) {
       try {
-        const response = await axios.post(
-          `${process.env.REACT_APP_ENDPOINT}${REISSUE}` ||
-            `http://localhost:8080${REISSUE}`,
-          reissueRequestDto,
-        );
-        if (response) {
-          sessionStorage.setItem('accessToken', response.data.data.accessToken);
-          sessionStorage.setItem(
-            'refreshToken',
-            response.data.data.refreshToken,
-          );
+        const reissueRequestDto = {
+          accessToken: sessionStorage.getItem('accessToken'),
+          refreshToken: sessionStorage.getItem('refreshToken'),
+        };
 
-          return await apiClient.request(originalConfig);
-        }
-      } catch (err) {
-        console.error(err);
+        const reissueUrl =
+          (process.env.REACT_APP_ENDPOINT || 'http://localhost:8080') + REISSUE;
+
+        const { data } = await axios.post(reissueUrl, reissueRequestDto);
+
+        sessionStorage.setItem('accessToken', data.accessToken);
+        sessionStorage.setItem('refreshToken', data.refreshToken);
+
+        originalConfig.headers['Authorization'] = `Bearer ${data.accessToken}`;
+
+        return apiClient.request(originalConfig);
+      } catch (reissueError) {
+        console.error('토큰 재발급 실패:', reissueError);
+        sessionStorage.clear();
         redirectToLogin();
       }
-      return Promise.reject(err);
-    } else if (err.response.data.status === 401) {
+    } else if (error.response && error.response.status === 401) {
       sessionStorage.clear();
       redirectToLogin();
     }
-    return Promise.reject(err);
+
+    return Promise.reject(error);
   },
 );
 
 function redirectToLogin() {
-  window.location.href = '/';
+  window.location.href = '/intro';
 }
 
 export default apiClient;
