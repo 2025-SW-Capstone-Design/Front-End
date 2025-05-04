@@ -6,6 +6,7 @@ import TestPage from './pages/Test';
 import IntroPage from './pages/Intro/IntroPage';
 import TokenProccesor from './utils/Authorization/TokenProccesor';
 import ProtectedLayout from './layouts/ProtectedLayout';
+import TeamPage from './pages/Team/TeamPage';
 
 const router = createBrowserRouter([
   { path: '/login', element: <LoginPage /> },
@@ -15,7 +16,10 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <ProtectedLayout />,
-    children: [{ index: true, element: <MainPage /> }],
+    children: [
+      { index: true, element: <MainPage /> },
+      { path: 'team/:teamId', element: <TeamPage /> },
+    ],
   },
 ]);
 

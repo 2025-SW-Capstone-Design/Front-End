@@ -1,5 +1,5 @@
 interface teamInfo {
-  teamId: number;
+  id: number;
   name: string;
   description: string;
   organizationName: string;
