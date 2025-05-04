@@ -43,7 +43,7 @@ const secondaryButton = styled.button<ButtonStylesProps>`
   ${ButtonLayout};
 
   width: ${({ width }) => width || '228px'};
-  background: ${({ theme }) => theme.colors.gray[10]};
+  background: ${({ theme }) => theme.colors.gray[20]};
   color: ${({ theme }) => theme.colors.gray[90]};
   ${({ theme }) => theme.text.bodyM_bold};
 
