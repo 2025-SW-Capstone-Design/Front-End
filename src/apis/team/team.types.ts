@@ -5,4 +5,14 @@ interface teamInfo {
   organizationName: string;
 }
 
-export type { teamInfo };
+interface teamCreateRequest {
+  name: string;
+  description: string;
+  organizationName: string;
+}
+
+interface teamInvitationRequest {
+  emails: string[];
+}
+
+export type { teamInfo, teamCreateRequest, teamInvitationRequest };

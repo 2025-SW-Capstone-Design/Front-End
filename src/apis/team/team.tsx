@@ -1,5 +1,9 @@
 import ApiBuilder from '../config/builder/ApiBuilder';
-import type { teamInfo } from './team.types';
+import type {
+  teamCreateRequest,
+  teamInfo,
+  teamInvitationRequest,
+} from './team.types';
 
 const END_POINT = {
   TEAM: '/api/v1/teams',
@@ -10,4 +14,27 @@ const getTeamList = () => {
   return ApiBuilder.create<void, teamInfo[]>(END_POINT.TEAM).setMethod('GET');
 };
 
-export { getTeamList };
+const createTeam = () => {
+  return ApiBuilder.create<teamCreateRequest, number>(END_POINT.TEAM).setMethod(
+    'POST',
+  );
+};
+
+const generateInvitationCode = (teamId: number) => {
+  return ApiBuilder.create<void, string>(
+    END_POINT.TEAM_DETAIL(teamId) + '/invitation-code',
+  ).setMethod('POST');
+};
+
+const sendTeamInvitationEmail = (teamId: number) => {
+  return ApiBuilder.create<teamInvitationRequest, void>(
+    END_POINT.TEAM_DETAIL(teamId) + '/invitation-emails',
+  ).setMethod('POST');
+};
+
+export {
+  getTeamList,
+  createTeam,
+  generateInvitationCode,
+  sendTeamInvitationEmail,
+};
