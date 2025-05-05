@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ModalPortal from '../Modal/ModalPortal';
 import * as S from './CreateTeamModal.styles';
 import Input from '../Input/Input';
@@ -6,41 +7,60 @@ import TextArea from '../TextArea/TextArea';
 import Button from '../Button/Button';
 import IconButton from '../IconButton/IconButton';
 import EmailTag from '../EmailTag/EmailTag';
-import { isValidEmail } from '../../utils/emailValidation';
+import { useEmailList } from '../../hooks/useEmailList';
+import { useApiMutation } from '../../apis/config/builder/ApiBuilder';
+import {
+  createTeam,
+  generateInvitationCode,
+  sendTeamInvitationEmail,
+} from '../../apis/team/team';
+import type { CreateTeamModalProps } from './CreateTeamModal.types';
+import type { teamCreateRequest } from '../../apis/team/team.types';
+import { queryClient } from '../../QueryClient';
 
-function CreateTeamModal() {
-  const [emails, setEmails] = useState<string[]>([]);
-  const [emailInput, setEmailInput] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const [emailStatus, setEmailStatus] = useState<
-    'default' | 'error' | 'success'
-  >('default');
+function CreateTeamModal({ onClose }: CreateTeamModalProps) {
+  const navigate = useNavigate();
 
-  const handleAddEmail = () => {
-    const validation = isValidEmail(emailInput);
+  const [name, setName] = useState('');
+  const [organizationName, setOrganizationName] = useState('');
+  const [description, setDescription] = useState('');
 
-    if (!validation.isValid) {
-      setErrorMessage(validation.message || '유효하지 않은 이메일입니다.');
-      setEmailStatus('error');
-      return;
-    }
+  const {
+    emails,
+    emailInput,
+    errorMessage,
+    emailStatus,
+    setEmailInput,
+    handleAddEmail,
+    handleRemoveEmail,
+  } = useEmailList();
 
-    if (emails.includes(emailInput)) {
-      setErrorMessage('이미 추가된 이메일입니다.');
-      setEmailStatus('error');
-      return;
-    }
+  const createTeamMutation = useApiMutation<teamCreateRequest, number>(
+    createTeam(),
+    {
+      onSuccess: async (teamId) => {
+        try {
+          await generateInvitationCode(teamId).execute();
 
-    setEmails((prevEmails) => [...prevEmails, emailInput]);
-    setEmailInput('');
-    setErrorMessage('');
-    setEmailStatus('success');
-  };
+          if (emails.length > 0) {
+            await sendTeamInvitationEmail(teamId).setData({ emails }).execute();
+          }
+          await queryClient.invalidateQueries({ queryKey: ['teams'] });
+          onClose();
+          navigate(`/team/${teamId}`);
+        } catch (err) {
+          console.error('팀 생성 중 에러 발생:', err);
+        }
+      },
+    },
+  );
 
-  const handleRemove = (emailToRemove: string) => {
-    setEmails((prevEmails) =>
-      prevEmails.filter((email) => email !== emailToRemove),
-    );
+  const handleCreateTeam = () => {
+    createTeamMutation.mutate({
+      name,
+      organizationName,
+      description,
+    });
   };
 
   return (
@@ -56,13 +76,20 @@ function CreateTeamModal() {
           <S.ModalContent>
             <S.InputContainer>
               <S.InputLabel>팀 이름</S.InputLabel>
-              <Input width="100%" placeholder="팀 이름을 알려주세요." />
-            </S.InputContainer>
-            <S.InputContainer>
-              <S.InputLabel>Github Organization 불러올게요.</S.InputLabel>
               <Input
                 width="100%"
-                placeholder="Organization account name을 입력하세요"
+                placeholder="팀 이름을 알려주세요."
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </S.InputContainer>
+            <S.InputContainer>
+              <S.InputLabel>Github Organization</S.InputLabel>
+              <Input
+                width="100%"
+                placeholder="Organization name을 입력하세요"
+                value={organizationName}
+                onChange={(e) => setOrganizationName(e.target.value)}
               />
             </S.InputContainer>
             <S.InputContainer>
@@ -70,7 +97,9 @@ function CreateTeamModal() {
               <TextArea
                 width="100%"
                 height="69px"
-                placeholder="프로젝트의 간략한 설명을 입력하세요."
+                placeholder="팀에 대한 간략한 설명을 입력하세요."
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
               />
             </S.InputContainer>
             <S.InputContainer>
@@ -82,7 +111,7 @@ function CreateTeamModal() {
                 message={errorMessage}
                 onChange={(e) => setEmailInput(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleAddEmail(); // Enter 키로 추가
+                  if (e.key === 'Enter') handleAddEmail();
                 }}
               />
               <S.EmailTagContainer>
@@ -90,17 +119,21 @@ function CreateTeamModal() {
                   <EmailTag
                     key={email}
                     email={email}
-                    onRemove={() => handleRemove(email)}
+                    onRemove={() => handleRemoveEmail(email)}
                   />
                 ))}
               </S.EmailTagContainer>
             </S.InputContainer>
           </S.ModalContent>
           <S.ModalFooter>
-            <Button buttonType="soft" width="120px">
+            <Button buttonType="soft" width="120px" onClick={onClose}>
               취소
             </Button>
-            <IconButton buttonType="primary" width="120px">
+            <IconButton
+              buttonType="primary"
+              width="120px"
+              onClick={handleCreateTeam}
+            >
               팀 생성하기
             </IconButton>
           </S.ModalFooter>

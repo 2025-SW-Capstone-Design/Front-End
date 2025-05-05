@@ -9,6 +9,7 @@ import { useApiQuery } from '../../apis/config/builder/ApiBuilder';
 import { getTeamList } from '../../apis/team/team';
 import Button from '../Button/Button';
 import IconButton from '../IconButton/IconButton';
+import CreateTeamModal from '../CreateTeamModal/CreateTeamModal';
 
 const Sidebar = () => {
   const naviate = useNavigate();
@@ -16,6 +17,7 @@ const Sidebar = () => {
 
   const { data } = useApiQuery(getTeamList(), 'teams');
   const [selectedTeamId, setSelectedTeamId] = useState<number | null>(null);
+  const [isTeamModalOpen, setIsTeamModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (teamId) {
@@ -35,31 +37,41 @@ const Sidebar = () => {
     navigateTo(`/team/${teamId}`);
   };
 
+  const handleTeamModal = () => {
+    setIsTeamModalOpen(!isTeamModalOpen);
+  };
+
   return (
-    <S.SidebarContainer>
-      <S.SidebarLogo src={SidebarLogo} alt="Sidebar-Logo" />
-      <S.SidebarHorizonBar />
-      <S.SidebarTeamListTitle>팀목록</S.SidebarTeamListTitle>
-      <S.SidebarTeamList>
-        {data?.map((team) => (
-          <S.SidebarTeam
-            key={team.id}
-            isSelected={team.id === selectedTeamId}
-            onClick={() => handleTeamClick(team.id)}
+    <>
+      {isTeamModalOpen && <CreateTeamModal onClose={handleTeamModal} />}
+      <S.SidebarContainer>
+        <S.SidebarLogo src={SidebarLogo} alt="Sidebar-Logo" />
+        <S.SidebarHorizonBar />
+        <S.SidebarTeamListTitle>팀목록</S.SidebarTeamListTitle>
+        <S.SidebarTeamList>
+          {data?.map((team) => (
+            <S.SidebarTeam
+              key={team.id}
+              isSelected={team.id === selectedTeamId}
+              onClick={() => handleTeamClick(team.id)}
+            >
+              {team.name}
+            </S.SidebarTeam>
+          ))}
+        </S.SidebarTeamList>
+        <S.SidebarButtonSection>
+          <IconButton buttonType="primary" onClick={() => handleTeamModal()}>
+            <img src={plus} alt="plus" />팀 생성하기
+          </IconButton>
+          <Button
+            buttonType="secondary"
+            onClick={() => navigateTo('/portfolio')}
           >
-            {team.name}
-          </S.SidebarTeam>
-        ))}
-      </S.SidebarTeamList>
-      <S.SidebarButtonSection>
-        <IconButton buttonType="primary">
-          <img src={plus} alt="plus" />팀 생성하기
-        </IconButton>
-        <Button buttonType="secondary" onClick={() => navigateTo('/portfolio')}>
-          포트폴리오
-        </Button>
-      </S.SidebarButtonSection>
-    </S.SidebarContainer>
+            포트폴리오
+          </Button>
+        </S.SidebarButtonSection>
+      </S.SidebarContainer>
+    </>
   );
 };
 
