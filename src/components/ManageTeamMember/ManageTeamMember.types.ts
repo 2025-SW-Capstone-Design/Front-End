@@ -1,3 +1,4 @@
+import type { teamMemberInfo } from '../../apis/teamMember/teamMember.types';
 import type { PositionType } from '../Label/Label.types';
 
 interface ManageTeamMemberProps {
@@ -8,4 +9,9 @@ interface ManageTeamMemberProps {
   onRemove?: () => void;
 }
 
-export { ManageTeamMemberProps };
+interface teamMemberProps {
+  info: teamMemberInfo;
+  isLeader: boolean;
+}
+
+export { ManageTeamMemberProps, teamMemberProps };

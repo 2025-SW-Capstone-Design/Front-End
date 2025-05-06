@@ -1,5 +1,8 @@
 import ApiBuilder from '../config/builder/ApiBuilder';
-import type { teamMemberInfo } from './teamMember.types';
+import type {
+  teamMemberInfo,
+  teamMemberUpdateRoleRequest,
+} from './teamMember.types';
 
 const END_POINT = {
   TEAM_MEMBER: (teamId: number) => `/api/v1/teams/${teamId}/members`,
@@ -11,4 +14,10 @@ const getTeamMembers = (teamId: number) => {
   ).setMethod('GET');
 };
 
-export { getTeamMembers };
+const updateTeamMemberPostion = (teamId: number) => {
+  return ApiBuilder.create<teamMemberUpdateRoleRequest, void>(
+    END_POINT.TEAM_MEMBER(teamId),
+  ).setMethod('PATCH');
+};
+
+export { getTeamMembers, updateTeamMemberPostion };

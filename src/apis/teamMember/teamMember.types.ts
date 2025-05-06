@@ -1,3 +1,5 @@
+import type { PositionType } from '../../components/Label/Label.types';
+
 interface teamMemberInfo {
   memberId: number;
   position: string;
@@ -6,4 +8,10 @@ interface teamMemberInfo {
   profileImageURL: string;
 }
 
-export { teamMemberInfo };
+interface teamMemberUpdateRoleRequest {
+  teamId: number;
+  teamMemberId: number;
+  role: PositionType;
+}
+
+export { teamMemberInfo, teamMemberUpdateRoleRequest };
