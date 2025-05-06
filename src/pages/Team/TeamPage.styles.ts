@@ -49,6 +49,15 @@ const TeamPageHeaderButtonWrapper = styled.div`
   gap: 24px;
 `;
 
+const TeamPageMenuWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  gap: 30px;
+  align-items: center;
+  padding: 24px 48px 48px 48px;
+`;
+
 export {
   TeamPageContainer,
   TeamPageHeader,
@@ -56,4 +65,5 @@ export {
   TeamPageHeaderWrapper,
   TeamPageHeaderButtonText,
   TeamPageHeaderButtonWrapper,
+  TeamPageMenuWrapper,
 };
