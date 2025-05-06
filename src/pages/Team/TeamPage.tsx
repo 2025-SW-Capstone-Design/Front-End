@@ -7,49 +7,71 @@ import type { AvatarMember } from '../../components/AvatarGroup/AvatarGroup.type
 import IconButton from '../../components/IconButton/IconButton';
 import LabelIcon from '../../assets/icon/LabelIcon.svg';
 import PlusIcon from '../../assets/icon/white_plus.svg';
+import ManageTeamModal from '../../components/ManageTeamModal/ManageTeamModal';
+import type { teamMemberInfo } from '../../apis/teamMember/teamMember.types';
 
 const TeamPage = () => {
   const currentTeam = useCurrentTeam();
-  const [teamMembers, setTeamMembers] = useState<AvatarMember[]>([]);
+  const [isOpenTeamModal, setIsOpenTeamModal] = useState<boolean>(false);
+  const [avatarMembers, setAvatarMembers] = useState<AvatarMember[]>([]);
+  const [teamMemberInfoList, setTeamMemberInfoList] = useState<
+    teamMemberInfo[]
+  >([]);
 
   useEffect(() => {
     const fetchTeamMembers = async () => {
       if (currentTeam?.id) {
         const response = await getTeamMembers(currentTeam.id).execute();
-        const mappedMembers: AvatarMember[] = response.data.map((member) => ({
+        const memberInfoList: teamMemberInfo[] = response.data;
+
+        const mappedAvatars: AvatarMember[] = memberInfoList.map((member) => ({
           name: member.nickname,
           position: member.position,
         }));
-        setTeamMembers(mappedMembers);
+
+        setTeamMemberInfoList(memberInfoList);
+        setAvatarMembers(mappedAvatars);
       }
     };
     fetchTeamMembers();
   }, [currentTeam?.id]);
 
-  console.log(teamMembers);
+  const handleTeamModal = () => {
+    setIsOpenTeamModal(!isOpenTeamModal);
+  };
 
   return (
-    <S.TeamPageContainer>
-      <S.TeamPageHeader>
-        <S.TeamPageHeaderTeamName>{currentTeam?.name}</S.TeamPageHeaderTeamName>
-        <S.TeamPageHeaderWrapper>
-          <S.TeamPageHeaderButtonText>
-            팀의 일정과 작업을 관리하세요
-          </S.TeamPageHeaderButtonText>
-          <S.TeamPageHeaderButtonWrapper>
-            <AvatarGroup members={teamMembers} />
-            <IconButton buttonType="secondary">
-              <img src={LabelIcon} alt="Label" />
-              라벨 관리
-            </IconButton>
-            <IconButton buttonType="tertiary">
-              <img src={PlusIcon} alt="TeamMember" />
-              팀원 관리
-            </IconButton>
-          </S.TeamPageHeaderButtonWrapper>
-        </S.TeamPageHeaderWrapper>
-      </S.TeamPageHeader>
-    </S.TeamPageContainer>
+    <>
+      {isOpenTeamModal && (
+        <ManageTeamModal
+          onClose={() => setIsOpenTeamModal(false)}
+          teamMembers={teamMemberInfoList}
+        />
+      )}
+      <S.TeamPageContainer>
+        <S.TeamPageHeader>
+          <S.TeamPageHeaderTeamName>
+            {currentTeam?.name}
+          </S.TeamPageHeaderTeamName>
+          <S.TeamPageHeaderWrapper>
+            <S.TeamPageHeaderButtonText>
+              팀의 일정과 작업을 관리하세요
+            </S.TeamPageHeaderButtonText>
+            <S.TeamPageHeaderButtonWrapper>
+              <AvatarGroup members={avatarMembers} />
+              <IconButton buttonType="secondary">
+                <img src={LabelIcon} alt="Label" />
+                라벨 관리
+              </IconButton>
+              <IconButton buttonType="tertiary" onClick={handleTeamModal}>
+                <img src={PlusIcon} alt="TeamMember" />
+                팀원 관리
+              </IconButton>
+            </S.TeamPageHeaderButtonWrapper>
+          </S.TeamPageHeaderWrapper>
+        </S.TeamPageHeader>
+      </S.TeamPageContainer>
+    </>
   );
 };
 
