@@ -65,11 +65,15 @@ const TeamPage = () => {
             </S.TeamPageHeaderButtonText>
             <S.TeamPageHeaderButtonWrapper>
               <AvatarGroup members={avatarMembers} />
-              <IconButton buttonType="secondary">
+              <IconButton buttonType="secondary" width="154px">
                 <img src={LabelIcon} alt="Label" />
                 라벨 관리
               </IconButton>
-              <IconButton buttonType="tertiary" onClick={handleTeamModal}>
+              <IconButton
+                buttonType="tertiary"
+                onClick={handleTeamModal}
+                width="154px"
+              >
                 <img src={PlusIcon} alt="TeamMember" />
                 팀원 관리
               </IconButton>
