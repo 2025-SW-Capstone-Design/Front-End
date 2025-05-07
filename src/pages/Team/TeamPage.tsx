@@ -24,21 +24,22 @@ const TeamPage = () => {
     teamMemberInfo[]
   >([]);
 
+  const fetchTeamMembers = async () => {
+    if (currentTeam?.id) {
+      const response = await getTeamMembers(currentTeam.id).execute();
+      const memberInfoList: teamMemberInfo[] = response.data;
+
+      const mappedAvatars: AvatarMember[] = memberInfoList.map((member) => ({
+        name: member.nickname,
+        position: member.position,
+      }));
+
+      setTeamMemberInfoList(memberInfoList);
+      setAvatarMembers(mappedAvatars);
+    }
+  };
+
   useEffect(() => {
-    const fetchTeamMembers = async () => {
-      if (currentTeam?.id) {
-        const response = await getTeamMembers(currentTeam.id).execute();
-        const memberInfoList: teamMemberInfo[] = response.data;
-
-        const mappedAvatars: AvatarMember[] = memberInfoList.map((member) => ({
-          name: member.nickname,
-          position: member.position,
-        }));
-
-        setTeamMemberInfoList(memberInfoList);
-        setAvatarMembers(mappedAvatars);
-      }
-    };
     fetchTeamMembers();
   }, [currentTeam?.id]);
 
@@ -52,6 +53,7 @@ const TeamPage = () => {
         <ManageTeamModal
           onClose={() => setIsOpenTeamModal(false)}
           teamMembers={teamMemberInfoList}
+          refetchMembers={fetchTeamMembers}
         />
       )}
       <S.TeamPageContainer>

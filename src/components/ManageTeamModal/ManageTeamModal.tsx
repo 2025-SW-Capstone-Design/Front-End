@@ -14,7 +14,11 @@ import {
 } from '../../apis/team/team';
 import { useParams } from 'react-router-dom';
 
-function ManageTeamModal({ onClose, teamMembers }: ManageTeamModalProps) {
+function ManageTeamModal({
+  onClose,
+  teamMembers,
+  refetchMembers,
+}: ManageTeamModalProps) {
   const { teamId } = useParams();
   const [emails, setEmails] = useState<string[]>([]);
   const [emailInput, setEmailInput] = useState<string>('');
@@ -102,6 +106,7 @@ function ManageTeamModal({ onClose, teamMembers }: ManageTeamModalProps) {
                     key={teamMember.memberId}
                     info={teamMember}
                     isLeader={teamMember.role === 'ROLE_LEADER'}
+                    refetchMembers={refetchMembers}
                   />
                 ))}
               </S.ModifyPositionContent>

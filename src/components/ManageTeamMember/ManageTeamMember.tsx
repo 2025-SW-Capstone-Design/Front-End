@@ -9,7 +9,7 @@ import Label from '../Label/Label';
 import { updateTeamMemberPostion } from '../../apis/teamMember/teamMember';
 import { useParams } from 'react-router-dom';
 
-function ManageTeamMember({ info, isLeader }: teamMemberProps) {
+function ManageTeamMember({ info, isLeader, refetchMembers }: teamMemberProps) {
   const { teamId } = useParams();
 
   const handleChangePosition = async (newPosition: PositionType) => {
@@ -19,6 +19,7 @@ function ManageTeamMember({ info, isLeader }: teamMemberProps) {
         position: newPosition,
       })
       .execute();
+    refetchMembers();
   };
 
   return (

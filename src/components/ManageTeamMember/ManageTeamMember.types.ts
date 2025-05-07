@@ -12,6 +12,7 @@ interface ManageTeamMemberProps {
 interface teamMemberProps {
   info: teamMemberInfo;
   isLeader: boolean;
+  refetchMembers: () => void;
 }
 
 export { ManageTeamMemberProps, teamMemberProps };
