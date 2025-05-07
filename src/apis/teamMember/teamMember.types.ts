@@ -8,10 +8,9 @@ interface teamMemberInfo {
   profileImageURL: string;
 }
 
-interface teamMemberUpdateRoleRequest {
-  teamId: number;
-  teamMemberId: number;
-  role: PositionType;
+interface teamMemberUpdatePositionRequest {
+  memberId: number;
+  position: PositionType;
 }
 
-export { teamMemberInfo, teamMemberUpdateRoleRequest };
+export { teamMemberInfo, teamMemberUpdatePositionRequest };

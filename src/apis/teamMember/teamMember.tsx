@@ -1,7 +1,7 @@
 import ApiBuilder from '../config/builder/ApiBuilder';
 import type {
   teamMemberInfo,
-  teamMemberUpdateRoleRequest,
+  teamMemberUpdatePositionRequest,
 } from './teamMember.types';
 
 const END_POINT = {
@@ -15,8 +15,8 @@ const getTeamMembers = (teamId: number) => {
 };
 
 const updateTeamMemberPostion = (teamId: number) => {
-  return ApiBuilder.create<teamMemberUpdateRoleRequest, void>(
-    END_POINT.TEAM_MEMBER(teamId),
+  return ApiBuilder.create<teamMemberUpdatePositionRequest, void>(
+    END_POINT.TEAM_MEMBER(teamId) + '/position',
   ).setMethod('PATCH');
 };
 

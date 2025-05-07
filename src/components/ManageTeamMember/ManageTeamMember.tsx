@@ -15,9 +15,8 @@ function ManageTeamMember({ info, isLeader }: teamMemberProps) {
   const handleChangePosition = async (newPosition: PositionType) => {
     await updateTeamMemberPostion(Number(teamId))
       .setData({
-        teamId: Number(teamId),
-        teamMemberId: info.memberId,
-        role: newPosition,
+        memberId: info.memberId,
+        position: newPosition,
       })
       .execute();
   };
