@@ -74,7 +74,6 @@ class ApiBuilder<T = any, R = any> {
   }
 }
 
-// 클래스 외부에 커스텀 Hook 구현
 export function useApiQuery<T, R>(
   apiBuilder: ApiBuilder<T, R>,
   queryKey: any,
