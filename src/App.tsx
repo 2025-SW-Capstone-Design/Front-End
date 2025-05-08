@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 import { RouterProvider } from 'react-router-dom';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { RecoilRoot } from 'recoil';
 
 import router from './Router';
 import { queryClient } from './QueryClient';
@@ -16,18 +15,16 @@ import { AuthProvider } from './contexts/Auth/AuthContext';
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <RecoilRoot>
-        <ThemeProvider theme={theme}>
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <Suspense fallback={<div>Loading...</div>}>
-              <Global styles={globalStyles} />
-              <AuthProvider>
-                <RouterProvider router={router} />
-              </AuthProvider>
-            </Suspense>
-          </ErrorBoundary>
-        </ThemeProvider>
-      </RecoilRoot>
+      <ThemeProvider theme={theme}>
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Global styles={globalStyles} />
+            <AuthProvider>
+              <RouterProvider router={router} />
+            </AuthProvider>
+          </Suspense>
+        </ErrorBoundary>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 };
