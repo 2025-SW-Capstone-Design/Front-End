@@ -1,7 +1,9 @@
+import type { projectInfo } from '../../apis/project/project.types';
+
 interface DropdownProps {
-  options: string[];
+  options: projectInfo[];
   placeholder?: string;
-  onSelect: (option: string) => void;
+  onSelect: (optionId: number) => void;
   width?: string;
   dropdownType?: 'default' | 'primary';
 }

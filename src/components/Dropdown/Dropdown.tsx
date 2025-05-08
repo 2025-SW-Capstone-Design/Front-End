@@ -11,7 +11,7 @@ function Dropdown({
   dropdownType = 'default',
 }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,9 +27,9 @@ function Dropdown({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSelect = (option: string) => {
-    setSelected(option);
-    onSelect(option);
+  const handleSelect = (option: { projectId: number; title: string }) => {
+    setSelectedTitle(option.title);
+    onSelect(option.projectId);
     setIsOpen(false);
   };
 
@@ -40,18 +40,18 @@ function Dropdown({
         isOpen={isOpen}
         dropdownType={dropdownType}
       >
-        {selected ?? placeholder}
+        {selectedTitle ?? placeholder}
         <Drop />
       </S.SelectBox>
       {isOpen && (
         <S.OptionList dropdownType={dropdownType}>
           {options.map((option) => (
             <S.OptionItem
-              key={option}
+              key={option.projectId}
               onClick={() => handleSelect(option)}
-              isSelected={option === selected}
+              isSelected={option.title === selectedTitle}
             >
-              {option}
+              {option.title}
             </S.OptionItem>
           ))}
         </S.OptionList>
