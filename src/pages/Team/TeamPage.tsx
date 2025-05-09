@@ -15,10 +15,12 @@ import MeetingLogIcon from '../../assets/icon/MeetingLogIcon.svg';
 import ManageTeamModal from '../../components/ManageTeamModal/ManageTeamModal';
 import type { teamMemberInfo } from '../../apis/teamMember/teamMember.types';
 import Menu from '../../components/Menu/Menu';
+import TaskLabelModal from '../../components/TaskLabelModal/TaskLabelModal';
 
 const TeamPage = () => {
   const currentTeam = useCurrentTeam();
   const [isOpenTeamModal, setIsOpenTeamModal] = useState<boolean>(false);
+  const [isOpenTaskModal, setIsOpenTaskModal] = useState<boolean>(false);
   const [avatarMembers, setAvatarMembers] = useState<AvatarMember[]>([]);
   const [teamMemberInfoList, setTeamMemberInfoList] = useState<
     teamMemberInfo[]
@@ -47,6 +49,10 @@ const TeamPage = () => {
     setIsOpenTeamModal(!isOpenTeamModal);
   };
 
+  const handleTaskModal = () => {
+    setIsOpenTaskModal(!isOpenTaskModal);
+  };
+
   return (
     <>
       {isOpenTeamModal && (
@@ -55,6 +61,9 @@ const TeamPage = () => {
           teamMembers={teamMemberInfoList}
           refetchMembers={fetchTeamMembers}
         />
+      )}
+      {isOpenTaskModal && (
+        <TaskLabelModal teamInfo={currentTeam} onClose={handleTaskModal} />
       )}
       <S.TeamPageContainer>
         <S.TeamPageHeader>
@@ -67,7 +76,11 @@ const TeamPage = () => {
             </S.TeamPageHeaderButtonText>
             <S.TeamPageHeaderButtonWrapper>
               <AvatarGroup members={avatarMembers} />
-              <IconButton buttonType="secondary" width="154px">
+              <IconButton
+                buttonType="secondary"
+                width="154px"
+                onClick={handleTaskModal}
+              >
                 <img src={LabelIcon} alt="Label" />
                 라벨 관리
               </IconButton>
