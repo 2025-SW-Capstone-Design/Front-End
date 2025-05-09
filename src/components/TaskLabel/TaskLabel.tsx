@@ -3,7 +3,12 @@ import * as S from './TaskLabel.styles';
 import type { TaskLabelProps } from './TaskLabel.types';
 import { useTaskLabelStore } from '../../state/taskLabelState';
 
-const TaskLabel = ({ labelInfo, isClickable }: TaskLabelProps) => {
+const TaskLabel = ({
+  labelInfo,
+  isClickable,
+  type,
+  onClick,
+}: TaskLabelProps) => {
   const toggleLabel = useTaskLabelStore((state) => state.toggleLabel);
   const isSelected = useTaskLabelStore((state) =>
     state.isLabelSelected(labelInfo.labelId),
@@ -17,9 +22,9 @@ const TaskLabel = ({ labelInfo, isClickable }: TaskLabelProps) => {
   return (
     <S.TaskLabelContainer
       color={labelInfo.color}
-      isSelected={isSelected}
+      isSelected={type !== 'taskModal' && isSelected}
       isClickable={isClickable}
-      onClick={handleLabelClick}
+      onClick={type !== 'taskModal' ? handleLabelClick : onClick}
     >
       {labelInfo.name}
     </S.TaskLabelContainer>
