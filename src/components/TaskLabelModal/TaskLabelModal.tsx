@@ -1,191 +1,101 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import * as S from './TaskLableModal.styles';
 import ModalPortal from '../Modal/ModalPortal';
 import Dropdown from '../Dropdown/Dropdown';
 import { useApiQuery } from '../../apis/config/builder/ApiBuilder';
 import { getProjects } from '../../apis/project/project';
-import type { label } from '../../apis/label/label.types';
-import {
-  createLabel,
-  deleteLabel,
-  getLabels,
-  updateLabel,
-} from '../../apis/label/label';
+import type { TaskLabelModalProps } from './TaskLabelModal.types';
 import TaskLabel from '../TaskLabel/TaskLabel';
 import { SketchPicker } from 'react-color';
 import type { ColorResult } from 'react-color';
-import type { TaskLabelModalProps } from './TaskLabelModal.types';
 import Input from '../Input/Input';
 import TextArea from '../TextArea/TextArea';
 import Button from '../Button/Button';
+import { useTaskLabels } from '../../hooks/useTaskLabels';
+import type { label } from '../../apis/label/label.types';
 
 const TaskLabelModal = ({ teamInfo, onClose }: TaskLabelModalProps) => {
   const { data: projects } = useApiQuery(
     getProjects(teamInfo?.id as number),
     'projects',
   );
+
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(
     null,
   );
   const [selectedProjectName, setSelectedProjectName] = useState<string | null>(
     null,
   );
-  const [labelList, setLabelList] = useState<label[]>([]);
-  const [editLabel, setEditLabel] = useState<label>();
+
+  const { labels, addLabel, editLabel, removeLabel } = useTaskLabels(
+    teamInfo?.id,
+    selectedProjectId,
+  );
+
   const [displayEdit, setDisplayEdit] = useState<boolean>(false);
+  const [editLabelData, setEditLabelData] = useState<label | null>(null);
 
-  const [displayColorPicker, setDisplayColorPicker] = useState<boolean>(false);
-  const [displayEditColorPicker, setEditDisplayColorPicker] =
-    useState<boolean>(false);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [color, setColor] = useState('#000000');
+  const [displayColorPicker, setDisplayColorPicker] = useState(false);
 
-  const [color, setColor] = useState<string>('#000000');
-  const [editColor, setEditColor] = useState<string>('');
-
-  const [title, setTitle] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
-
-  const [editTitle, setEditTitle] = useState<string>('');
-  const [editDescription, setEditDescription] = useState<string>('');
-
-  useEffect(() => {
-    const fetchLabels = async () => {
-      if (!selectedProjectId) return;
-      try {
-        const response = await getLabels(
-          teamInfo?.id as number,
-          selectedProjectId,
-        ).execute();
-        setLabelList(response.data);
-      } catch (error) {
-        setLabelList([]);
-      }
-    };
-
-    fetchLabels();
-  }, [selectedProjectId, teamInfo?.id as number]);
+  const [editTitle, setEditTitle] = useState('');
+  const [editDescription, setEditDescription] = useState('');
+  const [editColor, setEditColor] = useState('');
+  const [displayEditColorPicker, setDisplayEditColorPicker] = useState(false);
 
   const handleProjectSelect = (projectId: number, repositoryName: string) => {
     setSelectedProjectId(projectId);
     setSelectedProjectName(repositoryName);
   };
 
-  const toggleColorPicker = () => {
-    setDisplayColorPicker(!displayColorPicker);
-  };
-
-  const handleColorChange = (color: ColorResult) => {
-    setColor(color.hex);
-  };
-
-  const toggleEditColorPicker = () => {
-    setEditDisplayColorPicker(!displayColorPicker);
-  };
-
-  const handleEditColorChange = (color: ColorResult) => {
-    setEditColor(color.hex);
-  };
-
-  const handleEditTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditTitle(e.target.value);
-  };
-
-  const handleEditDescriptionChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    setEditDescription(e.target.value);
-  };
-
-  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
-  };
-
-  const handleDescriptionChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    setDescription(e.target.value);
-  };
-
-  const handleCreateLabel = async () => {
+  const handleCreateLabel = () => {
     if (!selectedProjectId) return;
-    try {
-      await createLabel(teamInfo?.id as number)
-        .setData({
-          title,
-          description,
-          color: color.replace('#', ''),
-          projectId: selectedProjectId,
-        })
-        .execute();
-      setTitle('');
-      setDescription('');
-      setColor('#000000');
-      const response = await getLabels(
-        teamInfo?.id as number,
-        selectedProjectId,
-      ).execute();
-      setLabelList(response.data);
-    } catch (error) {
-      console.error('라벨 생성 실패:', error);
-    }
+    addLabel({
+      title,
+      description,
+      color: color.replace('#', ''),
+      projectId: selectedProjectId,
+    });
+    setTitle('');
+    setDescription('');
+    setColor('#000000');
   };
 
-  const handleUpdateLabel = async () => {
-    if (!editLabel?.labelId || !selectedProjectId) return;
+  const handleUpdateLabel = () => {
+    if (!editLabelData) return;
 
     const hasChanges =
-      editTitle !== editLabel.name ||
-      editDescription !== editLabel.description ||
-      editColor.replace('#', '') !== editLabel.color;
+      editTitle !== editLabelData.name ||
+      editDescription !== editLabelData.description ||
+      editColor.replace('#', '') !== editLabelData.color;
 
-    if (!hasChanges) {
-      console.log('변경된 내용이 없습니다.');
-      return;
-    }
+    if (!hasChanges) return;
 
-    try {
-      await updateLabel(teamInfo?.id as number, editLabel.labelId)
-        .setData({
-          oldTitle: editLabel.name,
-          newTitle: editTitle,
-          description: editDescription,
-          color: editColor.replace('#', ''),
-          organizationName: teamInfo?.organizationName as string,
-          repositoryName: selectedProjectName as string,
-          projectId: selectedProjectId,
-        })
-        .execute();
+    editLabel(editLabelData.labelId, {
+      oldTitle: editLabelData.name,
+      newTitle: editTitle,
+      description: editDescription,
+      color: editColor.replace('#', ''),
+      organizationName: teamInfo?.organizationName as string,
+      repositoryName: selectedProjectName as string,
+      projectId: selectedProjectId as number,
+    });
 
-      setDisplayEdit(false);
-
-      const response = await getLabels(
-        teamInfo?.id as number,
-        selectedProjectId,
-      ).execute();
-      setLabelList(response.data);
-    } catch (error) {
-      console.error('라벨 수정 실패:', error);
-    }
+    setDisplayEdit(false);
   };
 
-  const handleDeleteLabel = async () => {
-    if (!editLabel?.labelId || !selectedProjectId) return;
-    try {
-      await deleteLabel(teamInfo?.id as number, editLabel?.labelId)
-        .setData({
-          title: editTitle,
-          organizationName: teamInfo?.organizationName as string,
-          repositoryName: selectedProjectName as string,
-        })
-        .execute();
-      setDisplayEdit(false);
-      const response = await getLabels(
-        teamInfo?.id as number,
-        selectedProjectId,
-      ).execute();
-      setLabelList(response.data);
-    } catch (error) {
-      console.error('라벨 삭제 실패:', error);
-    }
+  const handleDeleteLabel = () => {
+    if (!editLabelData) return;
+
+    removeLabel(editLabelData.labelId, {
+      title: editLabelData.name,
+      organizationName: teamInfo?.organizationName as string,
+      repositoryName: selectedProjectName as string,
+    });
+
+    setDisplayEdit(false);
   };
 
   return (
@@ -208,14 +118,14 @@ const TaskLabelModal = ({ teamInfo, onClose }: TaskLabelModalProps) => {
           <S.ModalSectionWrapper>
             <S.ModalSmallText>프로젝트 라벨목록</S.ModalSmallText>
             <S.ModalTaskIssueWrapper>
-              {labelList?.map((label) => (
+              {labels.map((label) => (
                 <TaskLabel
                   key={label.labelId}
                   labelInfo={label}
                   isClickable
                   onClick={() => {
+                    setEditLabelData(label);
                     setEditTitle(label.name);
-                    setEditLabel(label);
                     setEditDescription(label.description);
                     setEditColor(`#${label.color}`);
                     setDisplayEdit(true);
@@ -225,20 +135,23 @@ const TaskLabelModal = ({ teamInfo, onClose }: TaskLabelModalProps) => {
               ))}
             </S.ModalTaskIssueWrapper>
           </S.ModalSectionWrapper>
+
           {displayEdit && (
             <S.ModalEditWrapper>
               <S.ModalSmallText>라벨 수정/삭제하기</S.ModalSmallText>
               <S.ModalEditText>색상 선택</S.ModalEditText>
               <S.ColorPreview
                 color={editColor}
-                onClick={toggleEditColorPicker}
+                onClick={() =>
+                  setDisplayEditColorPicker(!displayEditColorPicker)
+                }
               />
               {displayEditColorPicker && (
                 <S.Popover>
-                  <S.Cover onClick={() => setEditDisplayColorPicker(false)} />
+                  <S.Cover onClick={() => setDisplayEditColorPicker(false)} />
                   <SketchPicker
                     color={editColor}
-                    onChange={handleEditColorChange}
+                    onChange={(c: ColorResult) => setEditColor(c.hex)}
                   />
                 </S.Popover>
               )}
@@ -247,7 +160,7 @@ const TaskLabelModal = ({ teamInfo, onClose }: TaskLabelModalProps) => {
                 width="100%"
                 placeholder="라벨 이름을 입력해주세요"
                 value={editTitle}
-                onChange={handleEditTitleChange}
+                onChange={(e) => setEditTitle(e.target.value)}
               />
               <S.ModalSmallText>라벨 설명</S.ModalSmallText>
               <TextArea
@@ -255,7 +168,7 @@ const TaskLabelModal = ({ teamInfo, onClose }: TaskLabelModalProps) => {
                 width="100%"
                 height="98px"
                 value={editDescription}
-                onChange={handleEditDescriptionChange}
+                onChange={(e) => setEditDescription(e.target.value)}
               />
               <S.ModalButtonWrapper>
                 <Button
@@ -275,14 +188,21 @@ const TaskLabelModal = ({ teamInfo, onClose }: TaskLabelModalProps) => {
               </S.ModalButtonWrapper>
             </S.ModalEditWrapper>
           )}
+
           <S.ModalEditWrapper>
             <S.ModalSmallText>라벨 추가하기</S.ModalSmallText>
             <S.ModalEditText>색상 선택</S.ModalEditText>
-            <S.ColorPreview color={color} onClick={toggleColorPicker} />
+            <S.ColorPreview
+              color={color}
+              onClick={() => setDisplayColorPicker(!displayColorPicker)}
+            />
             {displayColorPicker && (
               <S.Popover>
                 <S.Cover onClick={() => setDisplayColorPicker(false)} />
-                <SketchPicker color={color} onChange={handleColorChange} />
+                <SketchPicker
+                  color={color}
+                  onChange={(c: ColorResult) => setColor(c.hex)}
+                />
               </S.Popover>
             )}
             <S.ModalSmallText>라벨 이름</S.ModalSmallText>
@@ -290,7 +210,7 @@ const TaskLabelModal = ({ teamInfo, onClose }: TaskLabelModalProps) => {
               width="100%"
               placeholder="라벨 이름을 입력해주세요"
               value={title}
-              onChange={handleTitleChange}
+              onChange={(e) => setTitle(e.target.value)}
             />
             <S.ModalSmallText>라벨 설명</S.ModalSmallText>
             <TextArea
@@ -298,7 +218,7 @@ const TaskLabelModal = ({ teamInfo, onClose }: TaskLabelModalProps) => {
               width="100%"
               height="98px"
               value={description}
-              onChange={handleDescriptionChange}
+              onChange={(e) => setDescription(e.target.value)}
             />
             <S.ModalButtonWrapper>
               <Button
@@ -310,6 +230,7 @@ const TaskLabelModal = ({ teamInfo, onClose }: TaskLabelModalProps) => {
               </Button>
             </S.ModalButtonWrapper>
           </S.ModalEditWrapper>
+
           <S.ModalButtonWrapper>
             <Button buttonType="primary" width="120px" onClick={onClose}>
               확인
