@@ -16,11 +16,11 @@ export const SelectBox = styled.div<{
     dropdownType === 'primary'
       ? theme.colors.primary[40]
       : theme.colors.gray[80]};
-  outline: 2px solid 
-  ${({ theme, dropdownType }) =>
-    dropdownType === 'primary'
-      ? theme.colors.primary[30]
-      : theme.colors.gray[60]};
+  outline: 2px solid
+    ${({ theme, dropdownType }) =>
+      dropdownType === 'primary'
+        ? theme.colors.primary[30]
+        : theme.colors.gray[60]};
   outline-offset: -2px;
   border-radius: 8px;
   background-color: white;
@@ -28,6 +28,8 @@ export const SelectBox = styled.div<{
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  gap: 10px;
 
   ${({ theme }) => theme.text.bodyM_medium};
   ${({ isOpen, theme, dropdownType }) =>
@@ -38,14 +40,18 @@ export const SelectBox = styled.div<{
         : theme.colors.gray[80]
     };
   `}
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
-  svg{
-  width: 24px;
-  height: 24px;
-  fill: ${({ theme, dropdownType }) =>
-    dropdownType === 'primary'
-      ? theme.colors.primary[40]
-      : theme.colors.gray[80]};
+  svg {
+    width: 24px;
+    height: 24px;
+    fill: ${({ theme, dropdownType }) =>
+      dropdownType === 'primary'
+        ? theme.colors.primary[40]
+        : theme.colors.gray[80]};
+  }
 `;
 
 export const OptionList = styled.ul<{ dropdownType: 'default' | 'primary' }>`
@@ -62,6 +68,9 @@ export const OptionList = styled.ul<{ dropdownType: 'default' | 'primary' }>`
   border-radius: 8px;
   background-color: white;
   z-index: 10;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 export const OptionItem = styled.li<{ isSelected: boolean }>`

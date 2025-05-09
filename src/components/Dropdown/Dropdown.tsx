@@ -5,7 +5,7 @@ import { ReactComponent as Drop } from '../../assets/icon/drop.svg';
 
 function Dropdown({
   options,
-  placeholder = '선택하세요',
+  placeholder = '전체보기',
   onSelect,
   width,
   dropdownType = 'default',
