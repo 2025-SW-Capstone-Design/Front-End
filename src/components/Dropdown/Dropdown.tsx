@@ -29,7 +29,7 @@ function Dropdown({
 
   const handleSelect = (option: { projectId: number; title: string }) => {
     setSelectedTitle(option.title);
-    onSelect(option.projectId);
+    onSelect(option.projectId, option.title);
     setIsOpen(false);
   };
 
