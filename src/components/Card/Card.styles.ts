@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 
 const CardContainer = styled.div`
-  width: 296px;
   min-height: 72px;
   display: flex;
   flex-direction: column;
@@ -39,7 +38,19 @@ const CardStatus = styled.div`
 const CardTitle = styled.div`
   width: 100%;
   height: 20px;
-  ${({ theme }) => theme.text.bodyM_bold};
+  ${({ theme }) => theme.text.bodyL_bold};
+`;
+
+const CardDescription = styled.div`
+  width: 100%;
+  height: 20px;
+  color: ${({ theme }) => theme.colors.gray[90]};
+  ${({ theme }) => theme.text.bodyM_light};
+
+  text-overflow: ellipsis;
+  white-space: wrap;
+  margin-top: 4px;
+  margin-bottom: 4px;
 `;
 
 const CardContent = styled.div`
@@ -55,19 +66,6 @@ const CardContentText = styled.div`
   height: 12px;
   ${({ theme }) => theme.text.labeS_bold};
   margin-top: 12px;
-`;
-
-const CardLabels = styled.div`
-  height: 64px;
-  padding: 2px;
-  overflow: auto;
-  &::-webkit-scrollbar {
-    display: none; /* Chrome Safari */
-  }
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 8px 4px;
 `;
 
 const CardFooter = styled.div`
@@ -89,25 +87,17 @@ const MemberAvatars = styled.div`
 
 const DueDate = styled.div`
   width: 100%;
-  height: 22px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  gap: 4px;
 `;
 
 const Date = styled.div`
+  margin-left: auto;
   width: auto;
-  height: 17px;
   ${({ theme }) => theme.text.bodyS_bold};
   color: ${({ theme }) => theme.colors.gray[80]};
-`;
-
-const Time = styled.div`
-  width: auto;
-  height: 17px;
-  ${({ theme }) => theme.text.bodyS_medium};
-  color: ${({ theme }) => theme.colors.gray[70]};
 `;
 
 export {
@@ -115,12 +105,11 @@ export {
   CardHeader,
   CardStatus,
   CardTitle,
+  CardDescription,
   CardContent,
   CardContentText,
-  CardLabels,
   CardFooter,
   MemberAvatars,
   DueDate,
   Date,
-  Time,
 };

@@ -6,6 +6,7 @@ const MilestoneCardWrapper = styled.div`
 
   gap: 12px;
   width: 296px;
+  height: 280px;
   max-width: 296px;
 
   padding: 12px 16px;
@@ -64,9 +65,7 @@ const MilestoneCardDescription = styled.div`
   height: 20px;
   color: ${({ theme }) => theme.colors.gray[90]};
   ${({ theme }) => theme.text.bodyS_light};
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+
   margin-bottom: 4px;
 `;
 
