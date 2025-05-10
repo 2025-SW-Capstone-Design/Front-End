@@ -6,6 +6,7 @@ interface DropdownProps {
   onSelect: (optionId: number, repositoryName: string) => void;
   width?: string;
   dropdownType?: 'default' | 'primary';
+  value?: number | null;
 }
 
 interface DropdownStylesProps {

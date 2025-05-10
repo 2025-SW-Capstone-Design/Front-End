@@ -9,10 +9,22 @@ function Dropdown({
   onSelect,
   width,
   dropdownType = 'default',
+  value,
 }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (value) {
+      const selectedOption = options.find(
+        (option) => option.projectId === value,
+      );
+      if (selectedOption) {
+        setSelectedTitle(selectedOption.title);
+      }
+    }
+  }, [value, options]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {

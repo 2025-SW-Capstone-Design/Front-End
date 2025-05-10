@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ModalPortal from '../Modal/ModalPortal';
 import * as S from './MilestoneModal.styles';
 import type { MilestoneModalProps } from './MilestoneModal.types';
@@ -6,9 +6,19 @@ import Dropdown from '../Dropdown/Dropdown';
 import TextArea from '../TextArea/TextArea';
 import Input from '../Input/Input';
 import Button from '../Button/Button';
-import { createMilestone } from '../../apis/milestone/milestone';
+import {
+  createMilestone,
+  updateMilestone,
+} from '../../apis/milestone/milestone';
+import { queryClient } from '../../QueryClient';
 
-const MilestoneModal = ({ onClose, projects, teamId }: MilestoneModalProps) => {
+const MilestoneModal = ({
+  onClose,
+  projects,
+  teamId,
+  projectId,
+  milestone,
+}: MilestoneModalProps) => {
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(
     null,
   );
@@ -17,8 +27,23 @@ const MilestoneModal = ({ onClose, projects, teamId }: MilestoneModalProps) => {
   const [startDate, setStartDate] = useState<string>('');
   const [dueDate, setDueDate] = useState<string>('');
 
-  const handleProjectSelect = (projectId: number) => {
-    setSelectedProjectId(projectId);
+  useEffect(() => {
+    if (projectId) {
+      setSelectedProjectId(projectId);
+    }
+  }, [projectId]);
+
+  useEffect(() => {
+    if (milestone) {
+      setTitle(milestone.title);
+      setDescription(milestone.description);
+      setStartDate(milestone.startDate);
+      setDueDate(milestone.dueDate);
+    }
+  }, [milestone]);
+
+  const handleProjectSelect = (selectedProjectId: number) => {
+    setSelectedProjectId(selectedProjectId);
   };
 
   const getNowISOString = () => {
@@ -52,6 +77,37 @@ const MilestoneModal = ({ onClose, projects, teamId }: MilestoneModalProps) => {
       })
       .execute();
 
+    queryClient.invalidateQueries({
+      queryKey: ['milestones', teamId, selectedProjectId],
+    });
+
+    onClose();
+  };
+
+  const handleUpdateMilestone = () => {
+    if (!milestone) return;
+
+    if (!selectedProjectId || !title || !startDate || !dueDate) {
+      alert('모든 항목을 입력해주세요.');
+      return;
+    }
+
+    const isoStartDate = new Date(startDate).toISOString();
+    const isoDueDate = new Date(dueDate).toISOString();
+
+    updateMilestone(teamId, selectedProjectId, milestone.milestoneId)
+      .setData({
+        title,
+        description,
+        startDate: isoStartDate,
+        dueDate: isoDueDate,
+      })
+      .execute();
+
+    queryClient.invalidateQueries({
+      queryKey: ['milestones', teamId, selectedProjectId],
+    });
+
     onClose();
   };
 
@@ -59,7 +115,9 @@ const MilestoneModal = ({ onClose, projects, teamId }: MilestoneModalProps) => {
     <ModalPortal>
       <S.ModalBackground>
         <S.ModalWrapper>
-          <S.ModalHeader>Milestone 생성</S.ModalHeader>
+          <S.ModalHeader>
+            {milestone ? 'Milestone 수정' : 'Milestone 생성'}
+          </S.ModalHeader>
 
           <S.ModalSectionWrapper>
             <S.ModalSmallText>프로젝트 선택</S.ModalSmallText>
@@ -67,6 +125,7 @@ const MilestoneModal = ({ onClose, projects, teamId }: MilestoneModalProps) => {
               options={projects || []}
               placeholder="프로젝트를 선택하세요."
               onSelect={handleProjectSelect}
+              value={selectedProjectId}
               dropdownType="default"
               width="100%"
             />
@@ -124,9 +183,9 @@ const MilestoneModal = ({ onClose, projects, teamId }: MilestoneModalProps) => {
             <Button
               buttonType="secondary"
               width="120px"
-              onClick={handleAddMilestone}
+              onClick={milestone ? handleUpdateMilestone : handleAddMilestone}
             >
-              추가하기
+              {milestone ? '수정하기' : '생성하기'}
             </Button>
           </S.ModalButtonWrapper>
         </S.ModalWrapper>

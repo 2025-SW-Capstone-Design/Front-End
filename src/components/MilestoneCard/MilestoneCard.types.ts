@@ -1,12 +1,10 @@
-import type { PositionType } from '../Label/Label.types';
+import type { MilestoneResponse } from '~/apis/milestone/milestone.types';
 
 interface MilestoneCardProps {
-  title: string;
-  status: string;
-  position: PositionType[];
-  isEditing: boolean;
+  milestone: MilestoneResponse;
   isSelected: boolean;
-  onSelect: (isSelected: boolean) => void;
+  onSelect: () => void;
+  selectedId: number | null;
 }
 
 export { MilestoneCardProps };

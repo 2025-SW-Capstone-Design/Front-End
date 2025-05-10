@@ -1,77 +1,61 @@
 import React from 'react';
 import * as S from './MilestoneCard.styles';
 import type { MilestoneCardProps } from './MilestoneCard.types';
-import Label from '../Label/Label';
 import AvatarGroup from '../AvatarGroup/AvatarGroup';
 import checkbox_blank from '../../assets/icon/checkbox-blank.svg';
 import checkbox from '../../assets/icon/checkbox.svg';
+import { formatKoreanDateTime } from '../../utils/formatter/timeFomatter';
 
 function MilestoneCard({
-  title,
-  status,
-  position,
-  isEditing,
+  milestone,
   isSelected,
+  selectedId,
   onSelect,
 }: MilestoneCardProps) {
   const handleCheckboxClick = () => {
-    onSelect(!isSelected);
+    onSelect();
   };
+
+  const selectedStatus = (status: string) => {
+    switch (status) {
+      case 'NOT_STARTED':
+        return '진행전';
+      case 'IN_PROGRESS':
+        return '진행중';
+      case 'DONE':
+        return '완료';
+    }
+  };
+
   return (
     <S.MilestoneCardWrapper>
       <S.MilestoneCardHeader>
         <S.MilestoneCardStatusBar>
-          <S.MilestoneCardStatus>{status}</S.MilestoneCardStatus>
-          {isEditing && (
+          <S.MilestoneCardStatus>
+            {selectedStatus(milestone.status)}
+          </S.MilestoneCardStatus>
+          {(selectedId === null || isSelected) && (
             <S.MilestoneCardCheckbox onClick={handleCheckboxClick}>
               <img src={isSelected ? checkbox : checkbox_blank} />
             </S.MilestoneCardCheckbox>
           )}
         </S.MilestoneCardStatusBar>
-        <S.MilestoneCardTitle>{title}</S.MilestoneCardTitle>
+        <S.MilestoneCardTitle>{milestone.title}</S.MilestoneCardTitle>
       </S.MilestoneCardHeader>
-      <S.MilestoneCardContent>
-        <S.MilestoneCardContentText>참여 직군</S.MilestoneCardContentText>
-        <S.MilestoneCardLabels>
-          {position.map((pos, index) => (
-            <Label key={index} position={pos} />
-          ))}
-        </S.MilestoneCardLabels>
-      </S.MilestoneCardContent>
+      <S.MilestoneCardDescription>
+        {milestone.description}
+      </S.MilestoneCardDescription>
       <S.MilestoneCardFooter>
         <S.MemberAvatars>
-          <AvatarGroup
-            members={[
-              {
-                name: '이정환 ',
-                position: 'DESIGNER',
-              },
-              {
-                name: '차영건 ',
-                position: 'FRONTEND',
-              },
-              {
-                name: '차차핑',
-                position: 'DEVOPS',
-              },
-              {
-                name: '차차차',
-                position: 'BACKEND',
-              },
-              {
-                name: '정연재',
-                position: 'FULLSTACK',
-              },
-              {
-                name: '정순재',
-                position: 'BACKEND',
-              },
-            ]}
-          />
+          <AvatarGroup members={[{ name: milestone.creator }]} />
         </S.MemberAvatars>
         <S.DueDate>
-          <S.Date>2024.10.21</S.Date>
-          <S.Time>12:0AM</S.Time>
+          <S.Date>
+            {'시작일: ' + formatKoreanDateTime(milestone.startDate)}
+          </S.Date>
+          <S.Date>
+            {'마감일: ' + formatKoreanDateTime(milestone.dueDate)}
+          </S.Date>
         </S.DueDate>
       </S.MilestoneCardFooter>
     </S.MilestoneCardWrapper>
