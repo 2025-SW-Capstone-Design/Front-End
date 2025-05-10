@@ -21,7 +21,7 @@ interface MilestoneResponse {
   creator: string;
   dueDate: string;
   startDate: string;
-  isCompleted: boolean;
+  status: string;
 }
 
 interface MilestoneDetailResponse {

@@ -6,7 +6,7 @@ import type {
   MilestoneUpdateRequest,
 } from './milestone.types';
 
-const BASE_ENDPOINT = (teamId: number) => `/api/v1/team/${teamId}`;
+const BASE_ENDPOINT = (teamId: number) => `/api/v1/teams/${teamId}`;
 
 const END_POINT = {
   UPDATE_MILESTONE: (teamId: number, projectId: number, milestoneId: number) =>
