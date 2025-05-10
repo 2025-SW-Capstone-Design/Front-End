@@ -1,10 +1,9 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as S from './MilestoneListModal.styles';
 import ModalPortal from '../Modal/ModalPortal';
 import IconButton from '../IconButton/IconButton';
 import Input from '../Input/Input';
 import pen from '../../assets/icon/pen.svg';
-import trash from '../../assets/icon/trash.svg';
 import MilestoneCard from '../MilestoneCard/MilestoneCard';
 import Modal from '../Modal/Modal';
 import type { MilestoneListModalProps } from './MilestoneListModal.types';
@@ -41,19 +40,6 @@ function MilestoneListModal({
       prev?.milestoneId === milestone.milestoneId ? null : milestone,
     );
   };
-
-  const handleDelete = useCallback(() => {
-    if (cachedMilestones && isSelected) {
-      const updatedMilestones = cachedMilestones.filter(
-        (milestone) => milestone.milestoneId !== isSelected.milestoneId,
-      );
-      queryClient.setQueryData<MilestoneResponse[]>(
-        ['milestones', teamId, selectedProjectId],
-        updatedMilestones,
-      );
-      setIsSelected(null);
-    }
-  }, [cachedMilestones, isSelected, teamId, selectedProjectId, setIsSelected]);
 
   const handleModalClose = () => {
     setIsEditMode(false);
