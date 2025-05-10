@@ -5,14 +5,34 @@ const KanbanContainer = styled.div`
   flex-direction: column;
 
   width: 100%;
-  margin-top: 53px;
+`;
+
+const KanbanHeader = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  width: 100%;
+  gap: 12px;
+  padding: 50px 0 30px 0;
+`;
+
+const KanbanHeaderRight = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
 `;
 
 const KanbanHeaderText = styled.div`
   font-size: 24px;
   font-weight: 700;
 
-  margin-bottom: 32px;
+  margin-right: auto;
+
+  display: flex;
+  align-items: center;
+  height: 100%;
 `;
 
 const KanbanListContainer = styled.div`
@@ -22,4 +42,10 @@ const KanbanListContainer = styled.div`
   gap: 24px;
 `;
 
-export { KanbanContainer, KanbanListContainer, KanbanHeaderText };
+export {
+  KanbanContainer,
+  KanbanListContainer,
+  KanbanHeader,
+  KanbanHeaderText,
+  KanbanHeaderRight,
+};

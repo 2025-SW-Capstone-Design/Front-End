@@ -7,6 +7,7 @@ interface IconInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 
 interface IconInputStylesProps {
   width?: string;
+  height?: string;
 }
 
 export { IconInputProps, IconInputStylesProps };

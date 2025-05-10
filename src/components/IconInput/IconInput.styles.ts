@@ -3,7 +3,6 @@ import { css } from '@emotion/react';
 import type { IconInputStylesProps } from './IconInput.types';
 
 const IconInputLayout = css`
-  height: 32px;
   flex-shrink: 0;
   padding: 10px 12px;
   border-radius: 8px;
@@ -13,6 +12,7 @@ const IconInputLayout = css`
 const IconInputWrapper = styled.div<IconInputStylesProps>`
   ${IconInputLayout};
   width: ${({ width }) => width || '200px'};
+  height: ${({ height }) => height || '40px'};
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -50,9 +50,10 @@ const IconWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  svg{
+  svg {
     width: 20px;
     height: 20px;
     fill: ${({ theme }) => theme.colors.gray[80]};
+  }
 `;
 export { IconInputWrapper, StyledInput, IconWrapper };
