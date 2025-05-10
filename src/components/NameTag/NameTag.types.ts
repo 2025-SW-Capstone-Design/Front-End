@@ -1,6 +1,6 @@
 interface NameTagProps {
   name: string;
-  position: string;
+  position?: string;
 }
 
 export { NameTagProps };

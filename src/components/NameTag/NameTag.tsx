@@ -6,7 +6,7 @@ function NameTag({ name, position }: NameTagProps) {
   return (
     <S.NameTagWrapper>
       <S.Name>{name}</S.Name>
-      <S.Divider />
+      {position && <S.Divider />}
       <S.Position>{position}</S.Position>
     </S.NameTagWrapper>
   );
