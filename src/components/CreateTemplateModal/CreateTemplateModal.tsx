@@ -40,7 +40,7 @@ const CreateTemplateModal = ({
   type,
   setDescription,
   setType,
-  handleCreateTemplate,
+  handleTemplate,
 }: CreateTemplateModalProps) => {
   return (
     <ModalPortal>
@@ -87,7 +87,7 @@ const CreateTemplateModal = ({
             <Button
               buttonType="primary"
               width="fit-content"
-              onClick={handleCreateTemplate}
+              onClick={handleTemplate}
             >
               템플릿 저장하기
             </Button>

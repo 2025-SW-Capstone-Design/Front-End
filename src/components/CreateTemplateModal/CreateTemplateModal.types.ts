@@ -4,7 +4,7 @@ interface CreateTemplateModalProps {
   type: string;
   setDescription: React.Dispatch<React.SetStateAction<string>>;
   setType: React.Dispatch<React.SetStateAction<string>>;
-  handleCreateTemplate: () => void;
+  handleTemplate: () => void;
 }
 
 export type { CreateTemplateModalProps };
