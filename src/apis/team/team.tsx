@@ -3,6 +3,7 @@ import type {
   teamCreateRequest,
   teamInfo,
   teamInvitationRequest,
+  teamJoinRequest,
 } from './team.types';
 
 const END_POINT = {
@@ -32,9 +33,16 @@ const sendTeamInvitationEmail = (teamId: number) => {
   ).setMethod('POST');
 };
 
+const joinTeam = () => {
+  return ApiBuilder.create<teamJoinRequest, number>(
+    END_POINT.TEAM + '/join',
+  ).setMethod('POST');
+};
+
 export {
   getTeamList,
   createTeam,
   generateInvitationCode,
   sendTeamInvitationEmail,
+  joinTeam,
 };
