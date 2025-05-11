@@ -4,6 +4,7 @@ import type {
   MilestoneDetailResponse,
   MilestoneResponse,
   MilestoneUpdateRequest,
+  MilestoneUpdateStatusRequest,
 } from './milestone.types';
 
 const BASE_ENDPOINT = (teamId: number) => `/api/v1/teams/${teamId}`;
@@ -22,6 +23,12 @@ const END_POINT = {
 
   GET_MILESTONE_DETAIL: (teamId: number, milestoneId: number) =>
     `${BASE_ENDPOINT(teamId)}/milestones/${milestoneId}`,
+  UPDATE_MILESTONE_STATUS: (
+    teamId: number,
+    projectId: number,
+    milestoneId: number,
+  ) =>
+    `${BASE_ENDPOINT(teamId)}/projects/${projectId}/milestones/${milestoneId}/status`,
 };
 
 const updateMilestone = (
@@ -58,10 +65,21 @@ const getMilestoneDetail = (teamId: number, milestoneId: number) => {
   ).setMethod('GET');
 };
 
+const updateMilestoneStatus = (
+  teamId: number,
+  projectId: number,
+  milestoneId: number,
+) => {
+  return ApiBuilder.create<MilestoneUpdateStatusRequest, void>(
+    END_POINT.UPDATE_MILESTONE_STATUS(teamId, projectId, milestoneId),
+  ).setMethod('PATCH');
+};
+
 export {
   updateMilestone,
   getMilesotnes,
   getMilestoneByProject,
   getMilestoneDetail,
   createMilestone,
+  updateMilestoneStatus,
 };
