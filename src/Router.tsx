@@ -43,6 +43,10 @@ const router = createBrowserRouter([
             path: 'project/:projectId/template/create',
             element: withSuspense(<TaskTemplatePage />),
           },
+          {
+            path: 'project/:projectId/template/:templateId',
+            element: withSuspense(<TaskTemplatePage />),
+          },
         ],
       },
     ],
