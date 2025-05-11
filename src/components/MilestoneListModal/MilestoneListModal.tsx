@@ -83,6 +83,7 @@ function MilestoneListModal({
                 isSelected={isSelected?.milestoneId === milestone.milestoneId}
                 onSelect={() => handleTemplateSelect(milestone)}
                 selectedId={isSelected?.milestoneId ?? null}
+                isSelectedProjectId={selectedProjectId === null ? true : false}
               />
             ))}
           </S.MilestoneCardContainer>

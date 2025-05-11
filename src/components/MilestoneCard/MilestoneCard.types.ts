@@ -5,6 +5,7 @@ interface MilestoneCardProps {
   isSelected: boolean;
   onSelect: () => void;
   selectedId: number | null;
+  isSelectedProjectId: boolean;
 }
 
 export { MilestoneCardProps };

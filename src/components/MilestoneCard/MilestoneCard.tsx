@@ -11,6 +11,7 @@ function MilestoneCard({
   isSelected,
   selectedId,
   onSelect,
+  isSelectedProjectId,
 }: MilestoneCardProps) {
   const handleCheckboxClick = () => {
     onSelect();
@@ -27,6 +28,7 @@ function MilestoneCard({
     }
   };
 
+  console.log('isSelectedProjectId', isSelectedProjectId);
   return (
     <S.MilestoneCardWrapper>
       <S.MilestoneCardHeader>
@@ -36,7 +38,9 @@ function MilestoneCard({
           </S.MilestoneCardStatus>
           {(selectedId === null || isSelected) && (
             <S.MilestoneCardCheckbox onClick={handleCheckboxClick}>
-              <img src={isSelected ? checkbox : checkbox_blank} />
+              {!isSelectedProjectId && (
+                <img src={isSelected ? checkbox : checkbox_blank} />
+              )}
             </S.MilestoneCardCheckbox>
           )}
         </S.MilestoneCardStatusBar>
