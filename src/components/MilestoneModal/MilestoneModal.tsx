@@ -9,6 +9,8 @@ import Button from '../Button/Button';
 import {
   createMilestone,
   updateMilestone,
+  getMilestoneByProject,
+  getMilesotnes,
 } from '../../apis/milestone/milestone';
 import { queryClient } from '../../QueryClient';
 
@@ -26,6 +28,7 @@ const MilestoneModal = ({
   const [description, setDescription] = useState<string>('');
   const [startDate, setStartDate] = useState<string>('');
   const [dueDate, setDueDate] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
     if (projectId) {
@@ -59,32 +62,62 @@ const MilestoneModal = ({
     return now.toISOString().slice(0, 16);
   };
 
-  const handleAddMilestone = () => {
+  // 데이터 리프레시 로직을 공통화
+  const refreshData = async (projectId: number) => {
+    try {
+      // 1. 선택된 프로젝트의 마일스톤 데이터 새로고침
+      const projectResponse = await getMilestoneByProject(
+        teamId,
+        projectId,
+      ).execute();
+      queryClient.setQueryData(
+        ['milestones', teamId, projectId],
+        projectResponse.data,
+      );
+
+      // 2. 전체보기(null) 데이터 새로고침
+      const allResponse = await getMilesotnes(teamId).execute();
+      queryClient.setQueryData(['milestones', teamId, null], allResponse.data);
+    } catch (error) {
+      console.error('마일스톤 데이터 새로고침 실패:', error);
+    }
+  };
+
+  const handleAddMilestone = async () => {
     if (!selectedProjectId || !title || !startDate || !dueDate) {
       alert('모든 항목을 입력해주세요.');
       return;
     }
 
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     const isoStartDate = new Date(startDate).toISOString();
     const isoDueDate = new Date(dueDate).toISOString();
 
-    createMilestone(teamId, selectedProjectId)
-      .setData({
-        title,
-        description,
-        startDate: isoStartDate,
-        dueDate: isoDueDate,
-      })
-      .execute();
+    try {
+      await createMilestone(teamId, selectedProjectId)
+        .setData({
+          title,
+          description,
+          startDate: isoStartDate,
+          dueDate: isoDueDate,
+        })
+        .execute();
 
-    queryClient.invalidateQueries({
-      queryKey: ['milestones', teamId, selectedProjectId],
-    });
+      // 데이터 새로고침
+      await refreshData(selectedProjectId);
 
-    onClose();
+      onClose();
+    } catch (error) {
+      console.error('마일스톤 생성 실패:', error);
+      alert('마일스톤 생성에 실패했습니다.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleUpdateMilestone = () => {
+  const handleUpdateMilestone = async () => {
     if (!milestone) return;
 
     if (!selectedProjectId || !title || !startDate || !dueDate) {
@@ -92,23 +125,32 @@ const MilestoneModal = ({
       return;
     }
 
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     const isoStartDate = new Date(startDate).toISOString();
     const isoDueDate = new Date(dueDate).toISOString();
 
-    updateMilestone(teamId, selectedProjectId, milestone.milestoneId)
-      .setData({
-        title,
-        description,
-        startDate: isoStartDate,
-        dueDate: isoDueDate,
-      })
-      .execute();
+    try {
+      await updateMilestone(teamId, selectedProjectId, milestone.milestoneId)
+        .setData({
+          title,
+          description,
+          startDate: isoStartDate,
+          dueDate: isoDueDate,
+        })
+        .execute();
 
-    queryClient.invalidateQueries({
-      queryKey: ['milestones', teamId, selectedProjectId],
-    });
+      // 데이터 새로고침
+      await refreshData(selectedProjectId);
 
-    onClose();
+      onClose();
+    } catch (error) {
+      console.error('마일스톤 수정 실패:', error);
+      alert('마일스톤 수정에 실패했습니다.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -138,6 +180,7 @@ const MilestoneModal = ({
               placeholder="마일스톤 이름을 입력해주세요"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              disabled={isSubmitting}
             />
           </S.ModalSectionWrapper>
 
@@ -150,6 +193,7 @@ const MilestoneModal = ({
               min={getNowISOString()}
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
+              disabled={isSubmitting}
             />
           </S.ModalSectionWrapper>
 
@@ -162,6 +206,7 @@ const MilestoneModal = ({
               min={getTomorrowISOString()}
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
+              disabled={isSubmitting}
             />
           </S.ModalSectionWrapper>
 
@@ -173,19 +218,30 @@ const MilestoneModal = ({
               height="98px"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              disabled={isSubmitting}
             />
           </S.ModalSectionWrapper>
 
           <S.ModalButtonWrapper>
-            <Button buttonType="tertiary" width="120px" onClick={onClose}>
+            <Button
+              buttonType="tertiary"
+              width="120px"
+              onClick={onClose}
+              disabled={isSubmitting}
+            >
               취소
             </Button>
             <Button
               buttonType="secondary"
               width="120px"
               onClick={milestone ? handleUpdateMilestone : handleAddMilestone}
+              disabled={isSubmitting}
             >
-              {milestone ? '수정하기' : '생성하기'}
+              {isSubmitting
+                ? '처리 중...'
+                : milestone
+                  ? '수정하기'
+                  : '생성하기'}
             </Button>
           </S.ModalButtonWrapper>
         </S.ModalWrapper>
