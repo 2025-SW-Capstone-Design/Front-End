@@ -8,9 +8,10 @@ const TaskLabel = ({
   isClickable,
   type,
   onClick,
+  selectedType,
 }: TaskLabelProps) => {
   const toggleLabel = useTaskLabelStore((state) => state.toggleLabel);
-  const isSelected = useTaskLabelStore((state) =>
+  const isSelectedGlobal = useTaskLabelStore((state) =>
     state.isLabelSelected(labelInfo.labelId),
   );
 
@@ -19,12 +20,15 @@ const TaskLabel = ({
     toggleLabel(labelInfo);
   };
 
+  const isSelected =
+    type === 'taskModal' ? selectedType === labelInfo.name : isSelectedGlobal;
+
   return (
     <S.TaskLabelContainer
       color={labelInfo.color}
-      isSelected={type !== 'taskModal' && isSelected}
+      isSelected={isSelected}
       isClickable={isClickable}
-      onClick={type !== 'taskModal' ? handleLabelClick : onClick}
+      onClick={type === 'taskModal' ? onClick : handleLabelClick}
     >
       {labelInfo.name}
     </S.TaskLabelContainer>

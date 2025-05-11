@@ -45,10 +45,10 @@ function TaskSettingModal({
   }, [selectedProjectId, teamId]);
 
   const isTask = modalType === 'task';
-  const title = isTask ? 'Task 생성' : 'Template 생성';
+  const title = isTask ? 'Task 생성' : 'Template 관리';
   const subtitle = isTask
     ? 'Task를 생성할 수 있어요'
-    : 'Task Template를 생성할 수 있어요';
+    : 'Task Template를 관리할 수 있어요';
 
   const handleProjectSelect = (projectId: number) => {
     setSelectedProjectId(projectId);
