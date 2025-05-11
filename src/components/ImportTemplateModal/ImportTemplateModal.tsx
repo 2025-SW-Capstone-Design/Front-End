@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import * as S from './ImportTemplateModal.styles';
 import ModalPortal from '../Modal/ModalPortal';
 import IconButton from '../IconButton/IconButton';
@@ -6,69 +6,41 @@ import Input from '../Input/Input';
 import TemplateCard from '../TemplateCard/TemplateCard';
 import pen from '../../assets/icon/pen.svg';
 import trash from '../../assets/icon/trash.svg';
-import type { PositionType } from '../Label/Label.types';
 import Modal from '../Modal/Modal';
+import type { ImportTemplateModalProps } from './ImportTemplateModal.types';
+import { queryClient } from '../../QueryClient';
+import type { IssueTemplateResponse } from '../../apis/template/template.types';
+import { deleteTemplate } from '../../apis/template/template';
+import { useNavigate } from 'react-router-dom';
 
-function ImportTemplateModal() {
-  const [searchTemplate, setSearchTemplate] = useState<string>('');
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
-  const [templateData, setTemplateData] = useState([
-    {
-      id: 1,
-      title: '프로젝트 템플릿 1',
-      position: ['FRONTEND', 'BACKEND', 'DESIGNER', 'MARKETER'],
-    },
-    {
-      id: 2,
-      title: '프로젝트 템플릿 2',
-      position: ['FULLSTACK', 'MOBILE', 'ANDROID', 'IOS'],
-    },
-    {
-      id: 3,
-      title: '프로젝트 템플릿 3',
-      position: ['DEVOPS', 'DBA', 'PLANNER', 'PM'],
-    },
-    {
-      id: 4,
-      title: '프로젝트 템플릿 4',
-      position: ['QA', 'ETC', 'DESIGNER', 'FRONTEND'],
-    },
+function ImportTemplateModal({
+  onClose,
+  teamId,
+  projectId,
+  modalType,
+}: ImportTemplateModalProps) {
+  const navigate = useNavigate();
+  const templates = queryClient.getQueryData<IssueTemplateResponse[]>([
+    'templates',
+    teamId,
+    projectId,
   ]);
-  const [selectedTemplates, setSelectedTemplates] = useState<number[]>([]);
 
-  // string[] -> PositionType[] 변환
-  const convertToPositionType = (positions: string[]): PositionType[] =>
-    positions.filter((pos): pos is PositionType =>
-      [
-        'NONE',
-        'BACKEND',
-        'FRONTEND',
-        'FULLSTACK',
-        'MOBILE',
-        'ANDROID',
-        'IOS',
-        'DEVOPS',
-        'DBA',
-        'PLANNER',
-        'PM',
-        'MARKETER',
-        'DESIGNER',
-        'QA',
-        'ETC',
-      ].includes(pos),
+  const [searchTemplate, setSearchTemplate] = useState<string>('');
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+  const [selectedTemplate, setSelectedTemplate] =
+    useState<IssueTemplateResponse | null>(null);
+
+  const filteredTemplates = useMemo(() => {
+    if (!templates) return [];
+    return templates.filter((template) =>
+      template.title.toLowerCase().includes(searchTemplate.toLowerCase()),
     );
+  }, [templates, searchTemplate]);
 
-  const filteredTemplates = templateData.filter((template) =>
-    template.title.toLowerCase().includes(searchTemplate.toLowerCase()),
-  );
-
-  const handleTemplateSelect = (id: number, isSelected: boolean) => {
-    setSelectedTemplates((prev) =>
-      isSelected
-        ? [...prev, id]
-        : prev.filter((templateId) => templateId !== id),
-    );
+  const handleTemplateSelect = (template: IssueTemplateResponse) => {
+    setSelectedTemplate((prev) => (prev === template ? null : template));
   };
 
   const handleDeleteButtonClick = () => {
@@ -76,10 +48,19 @@ function ImportTemplateModal() {
   };
 
   const confirmDelete = () => {
-    setTemplateData((prev) =>
-      prev.filter((template) => !selectedTemplates.includes(template.id)),
-    );
-    setSelectedTemplates([]);
+    deleteTemplate(Number(teamId), selectedTemplate?.id as number)
+      .execute()
+      .then(() => {
+        queryClient.invalidateQueries({
+          queryKey: ['templates', teamId, projectId],
+        });
+        alert('템플릿이 삭제되었습니다.');
+        navigate(`/team/${teamId}/calendar`);
+      })
+      .catch((error) => {
+        console.error('Error deleting template:', error);
+        alert('템플릿 삭제에 실패했습니다.');
+      });
     setIsDeleteModalOpen(false);
   };
 
@@ -87,43 +68,45 @@ function ImportTemplateModal() {
     setIsDeleteModalOpen(false);
   };
 
+  const confirmEdit = () => {
+    setIsEditModalOpen(false);
+    onClose();
+    navigate(
+      `/team/${teamId}/project/${projectId}/template/${selectedTemplate?.id}`,
+    );
+  };
+
+  console.log(selectedTemplate);
   return (
     <ModalPortal>
-      <S.ModalBackground>
-        <S.ModalWrapper>
+      <S.ModalBackground onClick={onClose}>
+        <S.ModalWrapper onClick={(e) => e.stopPropagation()}>
           <S.ModalHeader>
             <S.ModalTitle>템플릿 가져오기</S.ModalTitle>
-            <S.ModalButtonContainer>
-              {isEditing ? (
+            {modalType === 'createAndEdit' && (
+              <S.ModalButtonContainer>
                 <>
                   <IconButton
                     buttonType="secondary"
                     width="136px"
-                    onClick={() => setIsEditing(false)}
+                    onClick={() => setIsEditModalOpen(true)}
+                    disabled={!selectedTemplate}
                   >
                     <img src={pen} alt="" />
-                    편집 완료
+                    편집 하기
                   </IconButton>
                   <IconButton
                     buttonType="tertiary"
                     width="136px"
                     onClick={handleDeleteButtonClick}
+                    disabled={!selectedTemplate}
                   >
                     <img src={trash} alt="" />
                     삭제하기
                   </IconButton>
                 </>
-              ) : (
-                <IconButton
-                  buttonType="secondary"
-                  width="154px"
-                  onClick={() => setIsEditing(true)}
-                >
-                  <img src={pen} alt="" />
-                  편집하기
-                </IconButton>
-              )}
-            </S.ModalButtonContainer>
+              </S.ModalButtonContainer>
+            )}
           </S.ModalHeader>
           <S.ModalDescription>
             기존 템플릿을 열람하고 수정할 수 있습니다.
@@ -136,16 +119,13 @@ function ImportTemplateModal() {
             onChange={(e) => setSearchTemplate(e.target.value)}
           />
           <S.TemplateContainer>
-            {filteredTemplates.map((template, index) => (
+            {filteredTemplates.map((template) => (
               <TemplateCard
-                key={index}
-                title={template.title}
-                position={convertToPositionType(template.position)}
-                isEditing={isEditing}
-                isSelected={selectedTemplates.includes(template.id)}
-                onSelect={(isSelected) =>
-                  handleTemplateSelect(template.id, isSelected)
-                }
+                key={template.id}
+                template={template}
+                isSelected={selectedTemplate === template}
+                onSelect={() => handleTemplateSelect(template)}
+                modalType={modalType}
               />
             ))}
           </S.TemplateContainer>
@@ -154,10 +134,19 @@ function ImportTemplateModal() {
       {isDeleteModalOpen && (
         <Modal
           title="Task 템플릿을 삭제하시겠습니까?"
-          leftButtonText="삭제"
-          rightButtonText="아니요"
-          onLeftButtonClick={confirmDelete}
-          onRightButtonClick={cancelDelete}
+          leftButtonText="아니요"
+          rightButtonText="삭제"
+          onRightButtonClick={confirmDelete}
+          onLeftButtonClick={cancelDelete}
+        />
+      )}
+      {isEditModalOpen && (
+        <Modal
+          title="Task 템플릿을 수정하시겠습니까?"
+          leftButtonText="아니요"
+          rightButtonText="수정"
+          onRightButtonClick={confirmEdit}
+          onLeftButtonClick={() => setIsEditModalOpen(false)}
         />
       )}
     </ModalPortal>
