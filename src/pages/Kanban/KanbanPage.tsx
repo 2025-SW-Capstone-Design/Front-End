@@ -1,98 +1,130 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import * as S from './KanbanPage.styles';
-import { useCurrentTeam } from '../../hooks/useCurrentTeam';
 
 import BackIcon from '../../assets/icon/backIcon.svg';
 import plusIcon from '../../assets/icon/white_plus.svg';
 
-import { useNavigate } from 'react-router-dom';
 import IconButton from '../../components/IconButton/IconButton';
 import Dropdown from '../../components/Dropdown/Dropdown';
-import { getProjects } from '../../apis/project/project';
-import { useApiQuery } from '../../apis/config/builder/ApiBuilder';
 import Button from '../../components/Button/Button';
 import MilestoneModal from '../../components/MilestoneModal/MilestoneModal';
 import MilestoneListModal from '../../components/MilestoneListModal/MilestoneListModal';
-import type { MilestoneResponse } from '../../apis/milestone/milestone.types';
+import Kanban from '../../components/Kanban/Kanban';
+
+import { useCurrentTeam } from '../../hooks/useCurrentTeam';
+import { getProjects } from '../../apis/project/project';
 import {
   getMilesotnes,
   getMilestoneByProject,
 } from '../../apis/milestone/milestone';
-import Kanban from '../../components/Kanban/Kanban';
+import { useApiQuery } from '../../apis/config/builder/ApiBuilder';
+import { queryClient } from '../../QueryClient';
+
+import type { MilestoneResponse } from '../../apis/milestone/milestone.types';
 
 const KanbanPage = () => {
-  const currentTeam = useCurrentTeam();
   const navigate = useNavigate();
+  const currentTeam = useCurrentTeam();
 
-  const { data: rawProjects } = useApiQuery(
-    getProjects(currentTeam?.id as number),
-    'projects',
-  );
+  const teamId = currentTeam?.id ?? -1;
 
-  const projects = rawProjects
-    ? [{ projectId: -1, title: '전체보기', creator: '' }, ...rawProjects]
-    : [];
+  const { data: rawProjects } = useApiQuery(getProjects(teamId), 'projects');
+
+  const projects = useMemo(() => {
+    if (!rawProjects) return [];
+    return [{ projectId: -1, title: '전체보기', creator: '' }, ...rawProjects];
+  }, [rawProjects]);
 
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(
     null,
   );
   const [selectedMilestone, setSelectedMilestone] =
     useState<MilestoneResponse | null>(null);
-
-  const [isOpenMilestoneModal, setIsOpenMilestoneModal] =
-    useState<boolean>(false);
-
+  const [isOpenMilestoneModal, setIsOpenMilestoneModal] = useState(false);
   const [isOpenMilestoneListModal, setIsOpenMilestoneListModal] =
-    useState<boolean>(false);
+    useState(false);
 
   const { data: milestones } = useApiQuery(
     selectedProjectId === null
-      ? getMilesotnes(currentTeam?.id as number)
-      : getMilestoneByProject(currentTeam?.id as number, selectedProjectId),
-    ['milestones', currentTeam?.id, selectedProjectId],
+      ? getMilesotnes(teamId)
+      : getMilestoneByProject(teamId, selectedProjectId),
+    ['milestones', teamId, selectedProjectId],
   );
 
-  const handleProjectSelect = (projectId: number) => {
-    if (projectId === -1) {
-      setSelectedProjectId(null);
-    } else {
-      setSelectedProjectId(projectId);
-    }
-  };
+  const prefetchAllProjectMilestones = useCallback(async () => {
+    if (!teamId || !rawProjects) return;
 
-  return (
+    await Promise.all(
+      rawProjects.map(async (project) => {
+        if (project.projectId === -1) return;
+        try {
+          const response = await getMilestoneByProject(
+            teamId,
+            project.projectId,
+          ).execute();
+          queryClient.setQueryData(
+            ['milestones', teamId, project.projectId],
+            response.data,
+          );
+        } catch (error) {
+          console.error(
+            `Failed to prefetch milestones for project ${project.projectId}:`,
+            error,
+          );
+        }
+      }),
+    );
+  }, [teamId, rawProjects]);
+
+  useEffect(() => {
+    prefetchAllProjectMilestones();
+  }, [prefetchAllProjectMilestones]);
+
+  const handleProjectSelect = useCallback((projectId: number) => {
+    setSelectedProjectId(projectId === -1 ? null : projectId);
+  }, []);
+
+  const renderMilestoneModals = () => (
     <>
       {isOpenMilestoneModal && (
         <MilestoneModal
-          onClose={() => setIsOpenMilestoneModal(!isOpenMilestoneModal)}
+          onClose={() => setIsOpenMilestoneModal(false)}
           projects={rawProjects}
-          teamId={currentTeam?.id as number}
+          teamId={teamId}
           projectId={selectedProjectId}
-          milestone={selectedMilestone ? selectedMilestone : undefined}
+          milestone={selectedMilestone ?? undefined}
         />
       )}
       {isOpenMilestoneListModal && (
         <MilestoneListModal
-          onClose={() => setIsOpenMilestoneListModal(!isOpenMilestoneListModal)}
-          isOpenEditModal={() => setIsOpenMilestoneModal(!isOpenMilestoneModal)}
+          onClose={() => setIsOpenMilestoneListModal(false)}
+          isOpenEditModal={() => setIsOpenMilestoneModal(true)}
           isSelected={selectedMilestone as MilestoneResponse}
           setIsSelected={setSelectedMilestone}
-          teamId={currentTeam?.id as number}
+          teamId={teamId}
           selectedProjectId={selectedProjectId}
         />
       )}
+    </>
+  );
+
+  return (
+    <>
+      {renderMilestoneModals()}
       <S.KanbanContainer>
         <S.KanbanHeader>
-          <S.KanbanHeaderBack
-            onClick={() => navigate(`/team/${currentTeam?.id}`)}
-          >
+          <S.KanbanHeaderBack onClick={() => navigate(`/team/${teamId}`)}>
             <img src={BackIcon} alt="back" />
             돌아가기
           </S.KanbanHeaderBack>
+
           <S.KanbanHeaderTeamName>{currentTeam?.name}</S.KanbanHeaderTeamName>
+
           <S.KanbanHeaderButtonWrapper>
             <Dropdown
-              options={projects || []}
+              options={projects}
               onSelect={handleProjectSelect}
               dropdownType="primary"
               width="340px"
@@ -116,10 +148,8 @@ const KanbanPage = () => {
               Milestone 생성
             </IconButton>
           </S.KanbanHeaderButtonWrapper>
-          <Kanban
-            teamId={currentTeam?.id as number}
-            selectedProjectId={selectedProjectId}
-          />
+
+          <Kanban teamId={teamId} selectedProjectId={selectedProjectId} />
         </S.KanbanHeader>
       </S.KanbanContainer>
     </>
