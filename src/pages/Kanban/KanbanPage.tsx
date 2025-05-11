@@ -13,13 +13,11 @@ import { useApiQuery } from '../../apis/config/builder/ApiBuilder';
 import Button from '../../components/Button/Button';
 import MilestoneModal from '../../components/MilestoneModal/MilestoneModal';
 import MilestoneListModal from '../../components/MilestoneListModal/MilestoneListModal';
-import type { MilestoneResponse } from '~/apis/milestone/milestone.types';
+import type { MilestoneResponse } from '../../apis/milestone/milestone.types';
 import {
   getMilesotnes,
   getMilestoneByProject,
 } from '../../apis/milestone/milestone';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
 import Kanban from '../../components/Kanban/Kanban';
 
 const KanbanPage = () => {

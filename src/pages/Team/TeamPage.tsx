@@ -107,7 +107,7 @@ const TeamPage = () => {
             title="캘린더"
             icon={MeetingIcon}
             subTitle="일정을 간트차트로 확인해봐요!"
-            route={`/team/${currentTeam?.id}/kant`}
+            route={`/team/${currentTeam?.id}/calendar`}
             buttonText="확인하기"
           />
           <Menu
