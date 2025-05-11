@@ -5,7 +5,7 @@ import type {
 } from './template.types';
 
 const END_POINT = {
-  TEMPLATE: (teamId: number) => `/api/v1/teams/${teamId}`,
+  TEMPLATE: (teamId: number) => `/api/v1/teams/${teamId}/issue-templates`,
   TEMPLATE_DETAIL: (teamId: number, templateId: number) =>
     `/api/v1/teams/${teamId}/issue-templates/${templateId}`,
 };
