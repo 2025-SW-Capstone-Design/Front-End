@@ -9,7 +9,7 @@ const LoginPage = lazy(() => import('./pages/Login/LoginPage'));
 const IntroPage = lazy(() => import('./pages/Intro/IntroPage'));
 const TeamPage = lazy(() => import('./pages/Team/TeamPage'));
 const CalendarPage = lazy(() => import('./pages/Calendar/CalendarPage'));
-const TaskCreatePage = lazy(() => import('./pages/Task/TaskCreatePage'));
+const TaskCreatePage = lazy(() => import('./pages/Task/TaskPage'));
 const TaskTemplatePage = lazy(
   () => import('./pages/TaskTemplate/TaskTemplatePage'),
 );
@@ -36,7 +36,7 @@ const router = createBrowserRouter([
           { path: 'calendar', element: withSuspense(<CalendarPage />) },
           { path: 'kanban', element: withSuspense(<KanbanPage />) },
           {
-            path: 'project/:projectId/task/create',
+            path: 'project/:projectId/milestone/:milestoneId/task/create',
             element: withSuspense(<TaskCreatePage />),
           },
           {
