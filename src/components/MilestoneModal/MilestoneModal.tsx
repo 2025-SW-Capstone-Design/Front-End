@@ -62,10 +62,8 @@ const MilestoneModal = ({
     return now.toISOString().slice(0, 16);
   };
 
-  // 데이터 리프레시 로직을 공통화
   const refreshData = async (projectId: number) => {
     try {
-      // 1. 선택된 프로젝트의 마일스톤 데이터 새로고침
       const projectResponse = await getMilestoneByProject(
         teamId,
         projectId,
@@ -75,7 +73,6 @@ const MilestoneModal = ({
         projectResponse.data,
       );
 
-      // 2. 전체보기(null) 데이터 새로고침
       const allResponse = await getMilesotnes(teamId).execute();
       queryClient.setQueryData(['milestones', teamId, null], allResponse.data);
     } catch (error) {
@@ -105,7 +102,6 @@ const MilestoneModal = ({
         })
         .execute();
 
-      // 데이터 새로고침
       await refreshData(selectedProjectId);
 
       onClose();
@@ -141,7 +137,6 @@ const MilestoneModal = ({
         })
         .execute();
 
-      // 데이터 새로고침
       await refreshData(selectedProjectId);
 
       onClose();
