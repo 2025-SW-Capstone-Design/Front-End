@@ -9,6 +9,7 @@ const KanbanList = ({
   title,
   milestones,
   onDropMilestone,
+  getProjectIdByMilestoneId,
 }: KanbanListProps) => {
   const [, drop] = useDrop({
     accept: 'MILESTONE',
@@ -37,6 +38,7 @@ const KanbanList = ({
             key={milestone.milestoneId}
             data={milestone}
             cardType="milestone"
+            projectId={getProjectIdByMilestoneId(milestone.milestoneId)}
           />
         ))}
       </S.KanbanListItem>

@@ -195,6 +195,7 @@ const Kanban = ({ teamId, selectedProjectId }: KanbanProps) => {
               title={title}
               milestones={filteredMilestones.filter((m) => m.status === status)}
               onDropMilestone={(m) => handleDrop(m, status)}
+              getProjectIdByMilestoneId={(id) => milestoneToProjectMap[id]}
             />
           ))}
         </S.KanbanListContainer>
