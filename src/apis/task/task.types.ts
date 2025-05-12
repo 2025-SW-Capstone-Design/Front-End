@@ -9,4 +9,36 @@ interface IssueResponse {
   labels: label[];
 }
 
-export { IssueResponse };
+interface IssueCreateRequest {
+  milestoneId: number;
+  organizationName: string;
+  repositoryName: string;
+  title: string;
+  content: string;
+  assignees: string;
+  labels: string[];
+}
+
+interface IssueUpdateRequest {
+  organizationName: string;
+  repositoryName: string;
+  title: string;
+  content: string;
+  labels: string[];
+  assignees: string;
+  state: string;
+  teamMemberId: number;
+  milestoneId: number;
+}
+
+interface IssueClosedRequest {
+  organizationName: string;
+  repositoryName: string;
+}
+
+export {
+  IssueResponse,
+  IssueClosedRequest,
+  IssueCreateRequest,
+  IssueUpdateRequest,
+};
