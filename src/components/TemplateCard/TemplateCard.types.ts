@@ -5,6 +5,9 @@ interface TemplateCardProps {
   isSelected: boolean;
   onSelect: () => void;
   modalType: 'createAndEdit' | 'import';
+  onClose?: () => void;
+  setTitle?: React.Dispatch<React.SetStateAction<string>>;
+  setMarkDown?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export { TemplateCardProps };

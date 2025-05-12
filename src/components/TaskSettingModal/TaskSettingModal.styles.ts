@@ -18,7 +18,7 @@ const ModalWrapper = styled.div`
   transform: translate(-50%, -50%);
 
   width: 550px;
-  height: 440px;
+
   background-color: white;
   outline: 1px solid ${({ theme }) => theme.colors.gray[30]};
   outline-offset: -1px;

@@ -162,7 +162,7 @@ const MilestoneModal = ({
               options={projects || []}
               placeholder="프로젝트를 선택하세요."
               onSelect={handleProjectSelect}
-              value={selectedProjectId}
+              value={selectedProjectId as number}
               dropdownType="default"
               width="100%"
             />

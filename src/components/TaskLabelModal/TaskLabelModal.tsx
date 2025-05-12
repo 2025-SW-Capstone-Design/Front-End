@@ -51,7 +51,15 @@ const TaskLabelModal = ({ teamInfo, onClose }: TaskLabelModalProps) => {
   };
 
   const handleCreateLabel = () => {
-    if (!selectedProjectId) return;
+    if (!selectedProjectId) {
+      alert('프로젝트를 선택해주세요.');
+      return;
+    }
+    if (!title || !description || !color) {
+      alert('모든 항목을 입력해주세요.');
+      return;
+    }
+
     addLabel({
       title,
       description,
@@ -64,7 +72,10 @@ const TaskLabelModal = ({ teamInfo, onClose }: TaskLabelModalProps) => {
   };
 
   const handleUpdateLabel = () => {
-    if (!editLabelData) return;
+    if (!editLabelData) {
+      alert('수정할 라벨을 선택해주세요.');
+      return;
+    }
 
     const hasChanges =
       editTitle !== editLabelData.name ||
@@ -87,7 +98,10 @@ const TaskLabelModal = ({ teamInfo, onClose }: TaskLabelModalProps) => {
   };
 
   const handleDeleteLabel = () => {
-    if (!editLabelData) return;
+    if (!editLabelData) {
+      alert('삭제할 라벨을 선택해주세요.');
+      return;
+    }
 
     removeLabel(editLabelData.labelId, {
       title: editLabelData.name,

@@ -1,11 +1,9 @@
 import type { label } from '../../apis/label/label.types';
 
-interface TaskLabelProps {
+export interface TaskLabelProps {
   labelInfo: label;
   isClickable?: boolean;
-  type?: 'taskModal' | 'default';
+  type?: 'default' | 'taskModal';
   onClick?: () => void;
-  selectedType?: string; // 추가
+  selectedType?: string;
 }
-
-export { TaskLabelProps };

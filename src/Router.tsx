@@ -3,19 +3,17 @@ import { createBrowserRouter } from 'react-router-dom';
 import ProtectedLayout from './layouts/ProtectedLayout';
 import TokenProccesor from './utils/Authorization/TokenProccesor';
 
-// Lazy-loaded pages
 const MainPage = lazy(() => import('./pages/Main/MainPage'));
 const LoginPage = lazy(() => import('./pages/Login/LoginPage'));
 const IntroPage = lazy(() => import('./pages/Intro/IntroPage'));
 const TeamPage = lazy(() => import('./pages/Team/TeamPage'));
 const CalendarPage = lazy(() => import('./pages/Calendar/CalendarPage'));
-const TaskCreatePage = lazy(() => import('./pages/Task/TaskPage'));
+const TaskPage = lazy(() => import('./pages/Task/TaskPage'));
 const TaskTemplatePage = lazy(
   () => import('./pages/TaskTemplate/TaskTemplatePage'),
 );
 const KanbanPage = lazy(() => import('./pages/Kanban/KanbanPage'));
 
-// Fallback component during loading
 const withSuspense = (element: React.ReactNode) => (
   <Suspense fallback={<></>}>{element}</Suspense>
 );
@@ -37,7 +35,7 @@ const router = createBrowserRouter([
           { path: 'kanban', element: withSuspense(<KanbanPage />) },
           {
             path: 'project/:projectId/milestone/:milestoneId/task/create',
-            element: withSuspense(<TaskCreatePage />),
+            element: withSuspense(<TaskPage />),
           },
           {
             path: 'project/:projectId/template/create',

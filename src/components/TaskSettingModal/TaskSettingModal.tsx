@@ -15,6 +15,8 @@ import type { label } from '../../apis/label/label.types';
 import type { TaskSettingModalProps } from './TaskSettingModal.types';
 import TaskLabel from '../TaskLabel/TaskLabel';
 import { useTaskLabelStore } from '../../state/taskLabelState';
+import { getMilestoneByProject } from '../../apis/milestone/milestone';
+import type { MilestoneResponse } from '../../apis/milestone/milestone.types';
 
 function TaskSettingModal({
   teamId,
@@ -22,11 +24,23 @@ function TaskSettingModal({
   modalType,
 }: TaskSettingModalProps) {
   const navigate = useNavigate();
+  const { toggleLabel, resetSelectedLabels, selectedLabels } =
+    useTaskLabelStore();
+
   const { data: projects } = useApiQuery(getProjects(teamId), 'projects');
+
   const [selectedProjectId, setSelectedProjectId] = useState<number | null>(
     null,
   );
+  const [selectedMilestoneId, setSelectedMilestoneId] = useState<number | null>(
+    null,
+  );
   const [labelList, setLabelList] = useState<label[]>([]);
+  const [milestoneList, setMilestoneList] = useState<MilestoneResponse[]>([]);
+
+  useEffect(() => {
+    resetSelectedLabels();
+  }, []);
 
   useEffect(() => {
     const fetchLabels = async () => {
@@ -40,8 +54,22 @@ function TaskSettingModal({
       }
     };
 
+    const fetchMilestone = async () => {
+      if (!selectedProjectId) return;
+
+      try {
+        const response = await getMilestoneByProject(
+          teamId,
+          selectedProjectId,
+        ).execute();
+        setMilestoneList(response.data);
+      } catch (error) {
+        setMilestoneList([]);
+      }
+    };
+
     fetchLabels();
-    useTaskLabelStore.setState({ selectedLabels: [] });
+    fetchMilestone();
   }, [selectedProjectId, teamId]);
 
   const isTask = modalType === 'task';
@@ -54,11 +82,27 @@ function TaskSettingModal({
     setSelectedProjectId(projectId);
   };
 
+  const handleMilestoneSelect = (milestoneId: number) => {
+    setSelectedMilestoneId(milestoneId);
+  };
+
   const handleCreateClick = () => {
-    if (!selectedProjectId) return;
+    if (!selectedProjectId) {
+      alert('프로젝트가 선택되지 않았습니다.');
+      return;
+    }
+
+    if (isTask && !selectedMilestoneId) {
+      alert('마일스톤이 선택되지 않았습니다.');
+      return;
+    }
+    if (isTask && selectedLabels.length == 0) {
+      alert('라벨이 선택되지 않았습니다.');
+      return;
+    }
 
     const path = isTask
-      ? `/team/${teamId}/project/${selectedProjectId}/task/create`
+      ? `/team/${teamId}/project/${selectedProjectId}/milestone/${selectedMilestoneId}/task/create`
       : `/team/${teamId}/project/${selectedProjectId}/template/create`;
 
     navigate(path);
@@ -81,7 +125,7 @@ function TaskSettingModal({
                   <TaskLabel
                     key={label.labelId}
                     labelInfo={label}
-                    isClickable
+                    isClickable={true}
                   />
                 ))}
               </S.Labels>
@@ -98,6 +142,18 @@ function TaskSettingModal({
               width="100%"
             />
           </S.MilestoneContainer>
+          {isTask && (
+            <S.MilestoneContainer>
+              <S.MilestoneTitle>마일스톤 선택</S.MilestoneTitle>
+              <Dropdown
+                options={milestoneList || []}
+                placeholder="마일스톤을 선택하세요."
+                onSelect={handleMilestoneSelect}
+                dropdownType="default"
+                width="100%"
+              />
+            </S.MilestoneContainer>
+          )}
 
           <S.ButtonContainer>
             <Button buttonType="secondary" width="120px" onClick={onClose}>
@@ -107,7 +163,6 @@ function TaskSettingModal({
               buttonType="primary"
               width="120px"
               onClick={handleCreateClick}
-              disabled={!selectedProjectId}
             >
               {title}
             </IconButton>

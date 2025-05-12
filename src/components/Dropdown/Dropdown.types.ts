@@ -1,12 +1,13 @@
+import type { MilestoneResponse } from '../../apis/milestone/milestone.types';
 import type { projectInfo } from '../../apis/project/project.types';
 
 interface DropdownProps {
-  options: projectInfo[];
+  options: Array<projectInfo | MilestoneResponse>;
   placeholder?: string;
-  onSelect: (optionId: number, repositoryName: string) => void;
+  onSelect: (id: number, title: string) => void;
+  value?: number;
   width?: string;
   dropdownType?: 'default' | 'primary';
-  value?: number | null;
 }
 
 interface DropdownStylesProps {

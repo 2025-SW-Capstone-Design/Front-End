@@ -2,6 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as S from './Dropdown.styles';
 import type { DropdownProps } from './Dropdown.types';
 import { ReactComponent as Drop } from '../../assets/icon/drop.svg';
+import type { projectInfo } from '../../apis/project/project.types';
+import type { MilestoneResponse } from '../../apis/milestone/milestone.types';
+
+function isProjectInfo(option: any): option is projectInfo {
+  return 'projectId' in option;
+}
 
 function Dropdown({
   options,
@@ -17,9 +23,14 @@ function Dropdown({
 
   useEffect(() => {
     if (value) {
-      const selectedOption = options.find(
-        (option) => option.projectId === value,
-      );
+      const selectedOption = options.find((option) => {
+        if (isProjectInfo(option)) {
+          return option.projectId === value;
+        } else {
+          return option.milestoneId === value;
+        }
+      });
+
       if (selectedOption) {
         setSelectedTitle(selectedOption.title);
       }
@@ -39,9 +50,14 @@ function Dropdown({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSelect = (option: { projectId: number; title: string }) => {
-    setSelectedTitle(option.title);
-    onSelect(option.projectId, option.title);
+  const handleSelect = (option: projectInfo | MilestoneResponse) => {
+    if (isProjectInfo(option)) {
+      setSelectedTitle(option.title);
+      onSelect(option.projectId, option.title);
+    } else {
+      setSelectedTitle(option.title);
+      onSelect(option.milestoneId, option.title);
+    }
     setIsOpen(false);
   };
 
@@ -59,7 +75,9 @@ function Dropdown({
         <S.OptionList dropdownType={dropdownType}>
           {options.map((option) => (
             <S.OptionItem
-              key={option.projectId}
+              key={
+                isProjectInfo(option) ? option.projectId : option.milestoneId
+              }
               onClick={() => handleSelect(option)}
               isSelected={option.title === selectedTitle}
             >

@@ -6,6 +6,9 @@ import checkbox_blank from '../../assets/icon/checkbox-blank.svg';
 import checkbox from '../../assets/icon/checkbox.svg';
 import type { label } from '../../apis/label/label.types';
 import TaskLabel from '../TaskLabel/TaskLabel';
+import { getTemplateDetail } from '../../apis/template/template';
+import { useParams } from 'react-router-dom';
+import type { IssueTemplateResponse } from '../../apis/template/template.types';
 
 const TemplateLabelList: label[] = [
   {
@@ -39,7 +42,12 @@ function TemplateCard({
   isSelected,
   onSelect,
   modalType,
+  onClose,
+  setMarkDown,
+  setTitle,
 }: TemplateCardProps) {
+  const { teamId } = useParams();
+
   const handleCardClick = () => {
     onSelect();
   };
@@ -48,23 +56,45 @@ function TemplateCard({
     (label) => label.name === template.type,
   );
 
+  const fetchTemplateDetail = async () => {
+    return getTemplateDetail(Number(teamId), Number(template.id)).execute();
+  };
+
+  const selectTemplate = async () => {
+    try {
+      const response = await fetchTemplateDetail();
+      const data: IssueTemplateResponse = response.data;
+      setMarkDown?.(data.content);
+      setTitle?.(data.title);
+      onClose?.();
+    } catch (error) {
+      console.error('Failed to fetch template detail:', error);
+    }
+  };
+
   return (
     <S.TemplateCardWrapper onClick={handleCardClick}>
       <S.TemplateCardHeader>
         <S.TemplateCardTitle>{template.title}</S.TemplateCardTitle>
-        <S.TemplateCardCheckbox>
-          <img src={isSelected ? checkbox : checkbox_blank} alt="checkbox" />
-        </S.TemplateCardCheckbox>
+        {modalType === 'createAndEdit' && (
+          <S.TemplateCardCheckbox>
+            <img src={isSelected ? checkbox : checkbox_blank} alt="checkbox" />
+          </S.TemplateCardCheckbox>
+        )}
       </S.TemplateCardHeader>
       {labelInfo && <TaskLabel labelInfo={labelInfo} />}
       <S.TemplateDescription>{template.description}</S.TemplateDescription>
-      <S.ButtonContainer>
-        {modalType !== 'createAndEdit' && (
-          <IconButton buttonType="primary" width="120px;">
+      {modalType !== 'createAndEdit' && (
+        <S.ButtonContainer>
+          <IconButton
+            buttonType="primary"
+            width="120px;"
+            onClick={selectTemplate}
+          >
             템플릿 쓰기
           </IconButton>
-        )}
-      </S.ButtonContainer>
+        </S.ButtonContainer>
+      )}
     </S.TemplateCardWrapper>
   );
 }

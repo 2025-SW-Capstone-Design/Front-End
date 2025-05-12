@@ -10,21 +10,23 @@ import Modal from '../Modal/Modal';
 import type { ImportTemplateModalProps } from './ImportTemplateModal.types';
 import { queryClient } from '../../QueryClient';
 import type { IssueTemplateResponse } from '../../apis/template/template.types';
-import { deleteTemplate } from '../../apis/template/template';
+import { deleteTemplate, getTemplates } from '../../apis/template/template';
 import { useNavigate } from 'react-router-dom';
+import { useApiQuery } from '../../apis/config/builder/ApiBuilder';
 
 function ImportTemplateModal({
   onClose,
   teamId,
   projectId,
   modalType,
+  setMarkDown,
+  setTitle,
 }: ImportTemplateModalProps) {
   const navigate = useNavigate();
-  const templates = queryClient.getQueryData<IssueTemplateResponse[]>([
-    'templates',
-    teamId,
-    projectId,
-  ]);
+  const templates = useApiQuery(
+    getTemplates(Number(teamId), Number(projectId)),
+    ['templates', teamId, projectId],
+  );
 
   const [searchTemplate, setSearchTemplate] = useState<string>('');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
@@ -33,11 +35,11 @@ function ImportTemplateModal({
     useState<IssueTemplateResponse | null>(null);
 
   const filteredTemplates = useMemo(() => {
-    if (!templates) return [];
-    return templates.filter((template) =>
+    if (!templates.data) return [];
+    return templates.data.filter((template) =>
       template.title.toLowerCase().includes(searchTemplate.toLowerCase()),
     );
-  }, [templates, searchTemplate]);
+  }, [templates.data, searchTemplate]);
 
   const handleTemplateSelect = (template: IssueTemplateResponse) => {
     setSelectedTemplate((prev) => (prev === template ? null : template));
@@ -76,7 +78,6 @@ function ImportTemplateModal({
     );
   };
 
-  console.log(selectedTemplate);
   return (
     <ModalPortal>
       <S.ModalBackground onClick={onClose}>
@@ -126,6 +127,9 @@ function ImportTemplateModal({
                 isSelected={selectedTemplate === template}
                 onSelect={() => handleTemplateSelect(template)}
                 modalType={modalType}
+                onClose={onClose}
+                setMarkDown={setMarkDown}
+                setTitle={setTitle}
               />
             ))}
           </S.TemplateContainer>
