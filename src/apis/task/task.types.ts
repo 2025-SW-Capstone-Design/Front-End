@@ -36,9 +36,15 @@ interface IssueClosedRequest {
   repositoryName: string;
 }
 
+interface IssueDetailResponse {
+  issueDetail: IssueResponse;
+  teamMemberId: number;
+}
+
 export {
   IssueResponse,
   IssueClosedRequest,
   IssueCreateRequest,
   IssueUpdateRequest,
+  IssueDetailResponse,
 };

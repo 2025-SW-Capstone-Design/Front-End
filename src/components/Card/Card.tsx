@@ -12,7 +12,6 @@ function Card({ cardType, data, projectId }: CardProps) {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const { teamId } = useParams();
-  console.log(projectId);
 
   const [{ isDragging }, dragRef] = useDrag({
     type: 'MILESTONE',
