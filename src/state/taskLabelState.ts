@@ -6,6 +6,7 @@ interface TaskLabelState {
   toggleLabel: (label: label) => void;
   isLabelSelected: (labelId: number) => boolean;
   resetSelectedLabels: () => void;
+  setSelectedLabels: (labels: label[]) => void;
 }
 
 export const useTaskLabelStore = create<TaskLabelState>((set, get) => ({
@@ -37,5 +38,9 @@ export const useTaskLabelStore = create<TaskLabelState>((set, get) => ({
 
   resetSelectedLabels: () => {
     set({ selectedLabels: [] });
+  },
+
+  setSelectedLabels: (labels) => {
+    set({ selectedLabels: labels });
   },
 }));
