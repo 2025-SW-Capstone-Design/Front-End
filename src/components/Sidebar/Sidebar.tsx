@@ -28,6 +28,8 @@ const Sidebar = () => {
       if (!isNaN(numericTeamId)) {
         setSelectedTeamId(numericTeamId);
       }
+    } else {
+      setSelectedTeamId(null);
     }
   }, [teamId]);
 
