@@ -18,7 +18,7 @@ const ModalWrapper = styled.div`
   transform: translate(-50%, -50%);
 
   width: 678px;
-  height: auto;
+  height: 700px;
   background-color: white;
   outline: 1px solid ${({ theme }) => theme.colors.gray[30]};
   outline-offset: -1px;
@@ -55,15 +55,17 @@ const ModalDescription = styled.div`
 `;
 
 const MilestoneCardContainer = styled.div`
-  width: 100%;
-  height: 550px;
-  gap: 15px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+
+  width: 100%;
+
+  gap: 15px;
+
   overflow-y: auto;
   &::-webkit-scrollbar {
-    display: none; /* Chrome Safari */
+    display: none;
   }
 `;
 

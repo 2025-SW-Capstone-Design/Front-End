@@ -10,6 +10,7 @@ import { getTeamList } from '../../apis/team/team';
 import Button from '../Button/Button';
 import IconButton from '../IconButton/IconButton';
 import CreateTeamModal from '../CreateTeamModal/CreateTeamModal';
+import JoinTeamModal from '../JoinTeamModal/JoinTeamModal';
 
 const Sidebar = () => {
   const naviate = useNavigate();
@@ -18,6 +19,8 @@ const Sidebar = () => {
   const { data } = useApiQuery(getTeamList(), 'teams');
   const [selectedTeamId, setSelectedTeamId] = useState<number | null>(null);
   const [isTeamModalOpen, setIsTeamModalOpen] = useState<boolean>(false);
+  const [isTeamJoinModalOpen, setIsTeamJoinModalOpen] =
+    useState<boolean>(false);
 
   useEffect(() => {
     if (teamId) {
@@ -25,6 +28,8 @@ const Sidebar = () => {
       if (!isNaN(numericTeamId)) {
         setSelectedTeamId(numericTeamId);
       }
+    } else {
+      setSelectedTeamId(null);
     }
   }, [teamId]);
 
@@ -41,9 +46,14 @@ const Sidebar = () => {
     setIsTeamModalOpen(!isTeamModalOpen);
   };
 
+  const handleTeamJoinModal = () => {
+    setIsTeamJoinModalOpen(!isTeamJoinModalOpen);
+  };
+
   return (
     <>
       {isTeamModalOpen && <CreateTeamModal onClose={handleTeamModal} />}
+      {isTeamJoinModalOpen && <JoinTeamModal onClose={handleTeamJoinModal} />}
       <S.SidebarContainer>
         <S.SidebarLogo src={SidebarLogo} alt="Sidebar-Logo" />
         <S.SidebarHorizonBar />
@@ -60,9 +70,12 @@ const Sidebar = () => {
           ))}
         </S.SidebarTeamList>
         <S.SidebarButtonSection>
-          <IconButton buttonType="primary" onClick={() => handleTeamModal()}>
+          <IconButton buttonType="primary" onClick={handleTeamModal}>
             <img src={plus} alt="plus" />팀 생성하기
           </IconButton>
+          <Button buttonType="tertiary" onClick={handleTeamJoinModal}>
+            팀 참가하기
+          </Button>
           <Button
             buttonType="secondary"
             onClick={() => navigateTo('/portfolio')}

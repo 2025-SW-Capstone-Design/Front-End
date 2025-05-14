@@ -11,6 +11,7 @@ interface PositionInfo {
 interface LabelProps {
   position: PositionType;
   isClickable?: boolean;
+  onChange?: (newPosition: PositionType) => void;
 }
 
 interface DropdownLabelMenuProps {

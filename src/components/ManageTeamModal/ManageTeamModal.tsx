@@ -7,14 +7,33 @@ import EmailTag from '../EmailTag/EmailTag';
 import { isValidEmail } from '../../utils/emailValidation';
 import Input from '../Input/Input';
 import ManageTeamMember from '../ManageTeamMember/ManageTeamMember';
+import type { ManageTeamModalProps } from './ManageTeamModal.types';
+import {
+  generateInvitationCode,
+  sendTeamInvitationEmail,
+} from '../../apis/team/team';
+import { useParams } from 'react-router-dom';
+import { useApiQuery } from '../../apis/config/builder/ApiBuilder';
+import { getMemberDetail } from '../../apis/member/member';
 
-function ManageTeamModal() {
+function ManageTeamModal({
+  onClose,
+  teamMembers,
+  refetchMembers,
+}: ManageTeamModalProps) {
+  const { teamId } = useParams();
   const [emails, setEmails] = useState<string[]>([]);
   const [emailInput, setEmailInput] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [emailStatus, setEmailStatus] = useState<
     'default' | 'error' | 'success'
   >('default');
+
+  const { data: myMember } = useApiQuery(getMemberDetail(), ['myMember']);
+
+  const isCurrentUserLeader =
+    teamMembers.find((member) => member.memberId === myMember?.id)?.role ===
+    'ROLE_LEADER';
 
   const handleAddEmail = () => {
     const validation = isValidEmail(emailInput);
@@ -43,6 +62,16 @@ function ManageTeamModal() {
     );
   };
 
+  const handleSendInvitations = async () => {
+    if (emails.length === 0) {
+      onClose();
+      return;
+    }
+    await generateInvitationCode(Number(teamId)).execute();
+    await sendTeamInvitationEmail(Number(teamId)).setData({ emails }).execute();
+    onClose();
+  };
+
   return (
     <ModalPortal>
       <S.ModalBackground>
@@ -64,7 +93,7 @@ function ManageTeamModal() {
                 message={errorMessage}
                 onChange={(e) => setEmailInput(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleAddEmail(); // Enter 키로 추가
+                  if (e.key === 'Enter') handleAddEmail();
                 }}
               />
               <S.EmailTagContainer>
@@ -77,23 +106,32 @@ function ManageTeamModal() {
                 ))}
               </S.EmailTagContainer>
             </S.InputContainer>
+
             <S.ModifyPositionContainer>
               <S.ModifyPositionLabel>역할 수정</S.ModifyPositionLabel>
               <S.ModifyPositionContent>
-                <ManageTeamMember />
-                <ManageTeamMember />
-                <ManageTeamMember />
-                <ManageTeamMember />
-                <ManageTeamMember />
+                {teamMembers.map((teamMember) => (
+                  <ManageTeamMember
+                    key={teamMember.memberId}
+                    info={teamMember}
+                    isLeader={isCurrentUserLeader}
+                    refetchMembers={refetchMembers}
+                  />
+                ))}
               </S.ModifyPositionContent>
             </S.ModifyPositionContainer>
           </S.ModalContent>
+
           <S.ModalFooter>
-            <Button buttonType="soft" width="120px">
+            <Button buttonType="soft" width="120px" onClick={onClose}>
               취소
             </Button>
-            <IconButton buttonType="primary" width="120px">
-              팀 생성하기
+            <IconButton
+              buttonType="primary"
+              width="120px"
+              onClick={handleSendInvitations}
+            >
+              확인
             </IconButton>
           </S.ModalFooter>
         </S.ModalWrapper>

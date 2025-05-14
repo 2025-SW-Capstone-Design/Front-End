@@ -1,24 +1,52 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
-import MainPage from './pages/Main/MainPage';
-import LoginPage from './pages/Login/LoginPage';
-import TestPage from './pages/Test';
-import IntroPage from './pages/Intro/IntroPage';
-import TokenProccesor from './utils/Authorization/TokenProccesor';
 import ProtectedLayout from './layouts/ProtectedLayout';
-import TeamPage from './pages/Team/TeamPage';
+import TokenProccesor from './utils/Authorization/TokenProccesor';
+
+const MainPage = lazy(() => import('./pages/Main/MainPage'));
+const LoginPage = lazy(() => import('./pages/Login/LoginPage'));
+const IntroPage = lazy(() => import('./pages/Intro/IntroPage'));
+const TeamPage = lazy(() => import('./pages/Team/TeamPage'));
+const CalendarPage = lazy(() => import('./pages/Calendar/CalendarPage'));
+const TaskPage = lazy(() => import('./pages/Task/TaskPage'));
+const TaskTemplatePage = lazy(
+  () => import('./pages/TaskTemplate/TaskTemplatePage'),
+);
+const KanbanPage = lazy(() => import('./pages/Kanban/KanbanPage'));
+
+const withSuspense = (element: React.ReactNode) => (
+  <Suspense fallback={<></>}>{element}</Suspense>
+);
 
 const router = createBrowserRouter([
-  { path: '/login', element: <LoginPage /> },
-  { path: '/intro', element: <IntroPage /> },
+  { path: '/login', element: withSuspense(<LoginPage />) },
+  { path: '/intro', element: withSuspense(<IntroPage />) },
   { path: '/oauth2/redirect', element: <TokenProccesor /> },
-  { path: '/test', element: <TestPage /> },
   {
     path: '/',
     element: <ProtectedLayout />,
     children: [
-      { index: true, element: <MainPage /> },
-      { path: 'team/:teamId', element: <TeamPage /> },
+      { index: true, element: withSuspense(<MainPage />) },
+      {
+        path: 'team/:teamId',
+        children: [
+          { index: true, element: withSuspense(<TeamPage />) },
+          { path: 'calendar', element: withSuspense(<CalendarPage />) },
+          { path: 'kanban', element: withSuspense(<KanbanPage />) },
+          {
+            path: 'project/:projectId/milestone/:milestoneId/task/create',
+            element: withSuspense(<TaskPage />),
+          },
+          {
+            path: 'project/:projectId/template/create',
+            element: withSuspense(<TaskTemplatePage />),
+          },
+          {
+            path: 'project/:projectId/template/:templateId',
+            element: withSuspense(<TaskTemplatePage />),
+          },
+        ],
+      },
     ],
   },
 ]);

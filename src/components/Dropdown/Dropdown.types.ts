@@ -1,7 +1,11 @@
+import type { MilestoneResponse } from '../../apis/milestone/milestone.types';
+import type { projectInfo } from '../../apis/project/project.types';
+
 interface DropdownProps {
-  options: string[];
+  options: Array<projectInfo | MilestoneResponse>;
   placeholder?: string;
-  onSelect: (option: string) => void;
+  onSelect: (id: number, title: string) => void;
+  value?: number;
   width?: string;
   dropdownType?: 'default' | 'primary';
 }

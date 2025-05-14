@@ -1,6 +1,6 @@
 export interface AvatarMember {
   name: string;
-  position: string;
+  position?: string;
 }
 
 export interface AvatarGroupProps {

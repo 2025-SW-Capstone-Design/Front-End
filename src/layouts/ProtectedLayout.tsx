@@ -10,7 +10,6 @@ const LayoutWrapper = styled.div`
 
 const ContentWrapper = styled.div`
   flex: 1;
-  padding: 32px;
 `;
 
 const ProtectedLayout = () => {

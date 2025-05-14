@@ -1,10 +1,13 @@
-import type { PositionType } from '../Label/Label.types';
+import type { IssueTemplateResponse } from '../../apis/template/template.types';
+
 interface TemplateCardProps {
-  title: string;
-  position: PositionType[];
-  isEditing: boolean;
+  template: IssueTemplateResponse;
   isSelected: boolean;
-  onSelect: (isSelected: boolean) => void;
+  onSelect: () => void;
+  modalType: 'createAndEdit' | 'import';
+  onClose?: () => void;
+  setTitle?: React.Dispatch<React.SetStateAction<string>>;
+  setMarkDown?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export { TemplateCardProps };

@@ -15,4 +15,13 @@ interface teamInvitationRequest {
   emails: string[];
 }
 
-export type { teamInfo, teamCreateRequest, teamInvitationRequest };
+interface teamJoinRequest {
+  invitationCode: string;
+}
+
+export type {
+  teamInfo,
+  teamCreateRequest,
+  teamInvitationRequest,
+  teamJoinRequest,
+};

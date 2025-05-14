@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 
 const TemplateCardWrapper = styled.div`
   width: 289px;
-  height: 210px;
+  max-height: 230px;
   padding: 12px 16px;
   border-radius: 8px;
   display: flex;
@@ -65,6 +65,13 @@ const TemplateCardLabels = styled.div`
   gap: 8px 4px;
 `;
 
+const TemplateDescription = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 4px;
+  ${({ theme }) => theme.text.bodyS_medium};
+`;
+
 const ButtonContainer = styled.div`
   width: 100%;
   height: 44px;
@@ -82,5 +89,6 @@ export {
   TemplateCardContent,
   TemplateCardContentText,
   TemplateCardLabels,
+  TemplateDescription,
   ButtonContainer,
 };

@@ -1,13 +1,16 @@
 import styled from '@emotion/styled';
 
 const MilestoneCardWrapper = styled.div`
-  width: 296px;
-  height: 264px;
-  padding: 12px 16px;
-  border-radius: 8px;
   display: flex;
   flex-direction: column;
+
   gap: 12px;
+  width: 296px;
+  height: 280px;
+  max-width: 296px;
+
+  padding: 12px 16px;
+  border-radius: 8px;
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.08);
   background-color: white;
   outline: 1px solid ${({ theme }) => theme.colors.gray[40]};
@@ -57,6 +60,15 @@ const MilestoneCardTitle = styled.div`
   ${({ theme }) => theme.text.bodyM_bold};
 `;
 
+const MilestoneCardDescription = styled.div`
+  width: 100%;
+  height: 20px;
+  color: ${({ theme }) => theme.colors.gray[90]};
+  ${({ theme }) => theme.text.bodyS_light};
+
+  margin-bottom: 4px;
+`;
+
 const MilestoneCardContent = styled.div`
   width: 248px;
   height: auto;
@@ -103,25 +115,17 @@ const MemberAvatars = styled.div`
 
 const DueDate = styled.div`
   width: 100%;
-  height: 22px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  gap: 4px;
 `;
 
 const Date = styled.div`
+  margin-left: auto;
   width: auto;
-  height: 17px;
   ${({ theme }) => theme.text.bodyS_bold};
   color: ${({ theme }) => theme.colors.gray[80]};
-`;
-
-const Time = styled.div`
-  width: auto;
-  height: 17px;
-  ${({ theme }) => theme.text.bodyS_medium};
-  color: ${({ theme }) => theme.colors.gray[70]};
 `;
 
 export {
@@ -131,6 +135,7 @@ export {
   MilestoneCardStatus,
   MilestoneCardCheckbox,
   MilestoneCardTitle,
+  MilestoneCardDescription,
   MilestoneCardContent,
   MilestoneCardContentText,
   MilestoneCardLabels,
@@ -138,5 +143,4 @@ export {
   MemberAvatars,
   DueDate,
   Date,
-  Time,
 };

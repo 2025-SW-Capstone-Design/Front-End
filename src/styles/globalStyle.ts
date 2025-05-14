@@ -74,6 +74,18 @@ const globalStyles = css`
       SUIT,
       -apple-system;
   }
+  .w-md-editor {
+    box-shadow: none !important;
+    border: 1px solid var(--Gray-60, #aeb6bd);
+    font-family:
+      'SUIT Variable',
+      SUIT,
+      -apple-system;
+    caret-color: transparent;
+    font-size: 20px !important;
+    line-height: 1.5 !important;
+    box-sizing: border-box !important;
+  }
 `;
 
 export default globalStyles;

@@ -4,7 +4,7 @@ import type { LabelProps, PositionType } from '../Label.types';
 import { ReactComponent as DropdownIcon } from '../../../assets/icon/drop_small.svg';
 import DropdownLabelMenu from './DropdownLabelMenu';
 
-function DropdownLabel({ position }: LabelProps) {
+function DropdownLabel({ position, onChange }: LabelProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedPosition, setSelectedPosition] =
     useState<PositionType>(position);
@@ -15,7 +15,8 @@ function DropdownLabel({ position }: LabelProps) {
 
   const handleSelect = (newPosition: PositionType) => {
     setSelectedPosition(newPosition);
-    setIsOpen(false); // 선택 후 드롭다운 닫기
+    setIsOpen(false);
+    onChange?.(newPosition);
   };
 
   useEffect(() => {

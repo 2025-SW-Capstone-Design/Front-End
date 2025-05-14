@@ -1,7 +1,9 @@
-import type { PositionType } from '../Label/Label.types';
+import type { MilestoneResponse } from '../../apis/milestone/milestone.types';
 
 interface CardProps {
   cardType: 'milestone' | 'task';
+  data: MilestoneResponse;
+  projectId?: number;
 }
 
 export { CardProps };
