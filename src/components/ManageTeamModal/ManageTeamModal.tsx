@@ -13,6 +13,8 @@ import {
   sendTeamInvitationEmail,
 } from '../../apis/team/team';
 import { useParams } from 'react-router-dom';
+import { useApiQuery } from '../../apis/config/builder/ApiBuilder';
+import { getMemberDetail } from '../../apis/member/member';
 
 function ManageTeamModal({
   onClose,
@@ -26,6 +28,12 @@ function ManageTeamModal({
   const [emailStatus, setEmailStatus] = useState<
     'default' | 'error' | 'success'
   >('default');
+
+  const { data: myMember } = useApiQuery(getMemberDetail(), ['myMember']);
+
+  const isCurrentUserLeader =
+    teamMembers.find((member) => member.memberId === myMember?.id)?.role ===
+    'ROLE_LEADER';
 
   const handleAddEmail = () => {
     const validation = isValidEmail(emailInput);
@@ -85,7 +93,7 @@ function ManageTeamModal({
                 message={errorMessage}
                 onChange={(e) => setEmailInput(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleAddEmail(); // Enter 키로 추가
+                  if (e.key === 'Enter') handleAddEmail();
                 }}
               />
               <S.EmailTagContainer>
@@ -98,6 +106,7 @@ function ManageTeamModal({
                 ))}
               </S.EmailTagContainer>
             </S.InputContainer>
+
             <S.ModifyPositionContainer>
               <S.ModifyPositionLabel>역할 수정</S.ModifyPositionLabel>
               <S.ModifyPositionContent>
@@ -105,13 +114,14 @@ function ManageTeamModal({
                   <ManageTeamMember
                     key={teamMember.memberId}
                     info={teamMember}
-                    isLeader={teamMember.role === 'ROLE_LEADER'}
+                    isLeader={isCurrentUserLeader}
                     refetchMembers={refetchMembers}
                   />
                 ))}
               </S.ModifyPositionContent>
             </S.ModifyPositionContainer>
           </S.ModalContent>
+
           <S.ModalFooter>
             <Button buttonType="soft" width="120px" onClick={onClose}>
               취소

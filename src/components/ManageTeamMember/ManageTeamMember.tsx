@@ -32,7 +32,7 @@ function ManageTeamMember({ info, isLeader, refetchMembers }: teamMemberProps) {
         {info.role === 'ROLE_LEADER' && <S.OwnerTag>Owner</S.OwnerTag>}
       </S.MemberInfo>
       <S.MemberManageWrapper>
-        {isLeader ? (
+        {isLeader && info.role !== 'ROLE_LEADER' ? (
           <DropdownLabel
             position={info.position as PositionType}
             onChange={handleChangePosition}
@@ -40,6 +40,7 @@ function ManageTeamMember({ info, isLeader, refetchMembers }: teamMemberProps) {
         ) : (
           <Label position={info.position as PositionType} />
         )}
+
         <S.RemoveButton>
           <X />
         </S.RemoveButton>
