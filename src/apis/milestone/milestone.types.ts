@@ -25,7 +25,13 @@ interface MilestoneResponse {
 }
 
 interface MilestoneDetailResponse {
-  milestone: MilestoneResponse;
+  milestoneId: number;
+  title: string;
+  description: string;
+  creator: string;
+  dueDate: string;
+  startDate: string;
+  status: string;
   issues: IssueResponse[];
 }
 

@@ -60,7 +60,7 @@ const getMilesotnes = (teamId: number) => {
 };
 
 const getMilestoneDetail = (teamId: number, milestoneId: number) => {
-  return ApiBuilder.create<void, MilestoneDetailResponse[]>(
+  return ApiBuilder.create<void, MilestoneDetailResponse>(
     END_POINT.GET_MILESTONE_DETAIL(teamId, milestoneId),
   ).setMethod('GET');
 };
