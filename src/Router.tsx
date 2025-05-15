@@ -13,6 +13,13 @@ const TaskTemplatePage = lazy(
   () => import('./pages/TaskTemplate/TaskTemplatePage'),
 );
 const KanbanPage = lazy(() => import('./pages/Kanban/KanbanPage'));
+const MilestoneDetailPage = lazy(
+  () => import('./pages/Milestone/MilestoneDetailPage'),
+);
+const PortfolioPage = lazy(() => import('./pages/Portfolio/PortfolioPage'));
+const PortfolioModifyPage = lazy(
+  () => import('./pages/Portfolio/PortfolioModifyPage'),
+);
 
 const withSuspense = (element: React.ReactNode) => (
   <Suspense fallback={<></>}>{element}</Suspense>
@@ -28,6 +35,17 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: withSuspense(<MainPage />) },
       {
+        path: 'portfolio',
+        children: [
+          { index: true, element: withSuspense(<PortfolioPage />) },
+          { path: 'create', element: withSuspense(<PortfolioModifyPage />) },
+          {
+            path: 'edit/:portfolioId',
+            element: withSuspense(<PortfolioModifyPage />),
+          },
+        ],
+      },
+      {
         path: 'team/:teamId',
         children: [
           { index: true, element: withSuspense(<TeamPage />) },
@@ -36,6 +54,14 @@ const router = createBrowserRouter([
           {
             path: 'project/:projectId/milestone/:milestoneId/task/create',
             element: withSuspense(<TaskPage />),
+          },
+          {
+            path: 'project/:projectId/milestone/:milestoneId/task/:taskId/update',
+            element: withSuspense(<TaskPage />),
+          },
+          {
+            path: 'project/:projectId/milestone/:milestoneId',
+            element: withSuspense(<MilestoneDetailPage />),
           },
           {
             path: 'project/:projectId/template/create',
