@@ -10,4 +10,22 @@ interface PortfolioLambdaResponse {
   body: string;
 }
 
-export { PortfolioLambdaRequest, PortfolioLambdaResponse };
+interface ReadmeLambdaRequest {
+  project_name: string;
+  project_description: string;
+  tech_stack: string;
+  implemented_features: string;
+}
+
+interface ReadmeLambdaResponse {
+  statusCode: number;
+  headers: Record<string, string>;
+  body: string;
+}
+
+export {
+  PortfolioLambdaRequest,
+  PortfolioLambdaResponse,
+  ReadmeLambdaRequest,
+  ReadmeLambdaResponse,
+};
