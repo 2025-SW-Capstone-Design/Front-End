@@ -20,6 +20,8 @@ const PortfolioPage = lazy(() => import('./pages/Portfolio/PortfolioPage'));
 const PortfolioModifyPage = lazy(
   () => import('./pages/Portfolio/PortfolioModifyPage'),
 );
+const ReadmePage = lazy(() => import('./pages/Readme/ReadmePage'));
+const ReadmeModifyPage = lazy(() => import('./pages/Readme/ReadmeModifyPage'));
 
 const withSuspense = (element: React.ReactNode) => (
   <Suspense fallback={<></>}>{element}</Suspense>
@@ -70,6 +72,15 @@ const router = createBrowserRouter([
           {
             path: 'project/:projectId/template/:templateId',
             element: withSuspense(<TaskTemplatePage />),
+          },
+          { path: 'readme', element: withSuspense(<ReadmePage />) },
+          {
+            path: 'project/:projectId/readme/create',
+            element: withSuspense(<ReadmeModifyPage />),
+          },
+          {
+            path: 'project/:projectId/readme/edit/:readmeId',
+            element: withSuspense(<ReadmeModifyPage />),
           },
         ],
       },
