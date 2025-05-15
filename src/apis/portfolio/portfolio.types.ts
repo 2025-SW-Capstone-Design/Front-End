@@ -4,6 +4,7 @@ interface PortfolioRequest {
 }
 
 interface PortfolioDetailResponse {
+  id: number;
   title: string;
   content: string;
   createTime: string;

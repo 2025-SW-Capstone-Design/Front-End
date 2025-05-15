@@ -11,13 +11,13 @@ const END_POINT = {
 };
 
 const getPortfolioDetail = (portfolioId: number) => {
-  return ApiBuilder.create<PortfolioDetailResponse, void>(
+  return ApiBuilder.create<void, PortfolioDetailResponse>(
     END_POINT.PORTFOLIO_DETAIL(portfolioId),
   ).setMethod('GET');
 };
 
 const updatePortfolio = (portfolioId: number) => {
-  return ApiBuilder.create<number, PortfolioRequest>(
+  return ApiBuilder.create<PortfolioRequest, number>(
     END_POINT.PORTFOLIO_DETAIL(portfolioId),
   ).setMethod('PUT');
 };
@@ -29,13 +29,13 @@ const deletePortfolio = (portfolioId: number) => {
 };
 
 const createPortfolio = () => {
-  return ApiBuilder.create<number, PortfolioRequest>(
+  return ApiBuilder.create<PortfolioRequest, number>(
     END_POINT.PORTFOLIO,
   ).setMethod('POST');
 };
 
 const getPortfolios = () => {
-  return ApiBuilder.create<PortfolioDetailResponse[], void>(
+  return ApiBuilder.create<void, PortfolioDetailResponse[]>(
     END_POINT.PORTFOLIO,
   ).setMethod('GET');
 };
