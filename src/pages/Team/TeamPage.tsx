@@ -111,6 +111,13 @@ const TeamPage = () => {
             buttonText="확인하기"
           />
           <Menu
+            title="리드미"
+            icon={MeetingLogIcon}
+            subTitle="리드미를 쉽게 작성해봐요"
+            route={`/team/${currentTeam?.id}/readme`}
+            buttonText="확인하기"
+          />
+          <Menu
             title="미팅"
             icon={MeetingIcon}
             subTitle="Task 상태를 관리하고 진행 상황을 확인해봐요!"
