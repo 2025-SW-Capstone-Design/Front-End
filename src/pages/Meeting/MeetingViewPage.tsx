@@ -35,7 +35,6 @@ const MeetingViewPage = () => {
     undefined,
   );
   const [remoteTracks, setRemoteTracks] = useState<TrackInfo[]>([]);
-  const [participantName, setParticipantName] = useState<string>();
   const [selectedTrack, setSelectedTrack] = useState<{
     track: LocalVideoTrack | RemoteVideoTrack;
     participantIdentity: string;
@@ -55,13 +54,6 @@ const MeetingViewPage = () => {
     ['chatRoomMembers', teamId, chatRoomId],
   );
   const { data: member } = useApiQuery(getMemberDetail(), ['member']);
-
-  useEffect(() => {
-    if (member) {
-      const name = member.nickname;
-      setParticipantName(name);
-    }
-  }, [member]);
 
   useEffect(() => {
     if (chatRooms && roomName) {
@@ -171,8 +163,8 @@ const MeetingViewPage = () => {
         isCameraOn: true,
         isScreenSharing: false,
       });
+      navigate(`/team/${teamId}/meeting`);
     }
-    navigate(`/team/${teamId}/meeting`);
   };
 
   const toggleMedia = async (mediaType: 'mic' | 'camera' | 'screen') => {
@@ -231,17 +223,20 @@ const MeetingViewPage = () => {
               track,
               participantIdentity: isScreenShare
                 ? 'You (Screen Share)'
-                : (participantName as string),
+                : (member?.nickname as string),
             })
           }
         >
           <VideoComponent
             track={track}
             participantIdentity={
-              isScreenShare ? 'You (Screen Share)' : (participantName as string)
+              isScreenShare
+                ? 'You (Screen Share)'
+                : (member?.nickname as string)
             }
             local={true}
             selected={selectedTrack?.track.sid === track.sid}
+            chatRoomMembers={chatRoomMembers || []}
           />
         </div>
       );
@@ -266,6 +261,7 @@ const MeetingViewPage = () => {
             selected={
               selectedTrack?.track.sid === remoteTrack.trackPublication.trackSid
             }
+            chatRoomMembers={chatRoomMembers || []}
           />
         </div>
       ) : (
@@ -299,6 +295,10 @@ const MeetingViewPage = () => {
                 type="Full"
                 track={selectedTrack.track}
                 participantIdentity={selectedTrack.participantIdentity}
+                chatRoomMembers={chatRoomMembers || []}
+                mediaState={mediaState}
+                toggleMedia={toggleMedia}
+                leaveRoom={leaveRoom}
               />
             )}
           </S.ViewMainScreenWrapper>
@@ -307,18 +307,5 @@ const MeetingViewPage = () => {
     </S.ViewContainer>
   );
 };
-{
-  /* <div id="controls" style={{ marginBottom: '1rem' }}>
-    <button className="btn btn-secondary" onClick={() => toggleMedia('mic')}>
-      {mediaState.isMicOn ? 'Mute Mic' : 'Unmute Mic'}
-    </button>
-    <button className="btn btn-secondary" onClick={() => toggleMedia('camera')}>
-      {mediaState.isCameraOn ? 'Turn Off Camera' : 'Turn On Camera'}
-    </button>
-    <button className="btn btn-secondary" onClick={() => toggleMedia('screen')}>
-      {mediaState.isScreenSharing ? 'Stop Sharing' : 'Share Screen'}
-    </button>
-  </div>; */
-}
 
 export default MeetingViewPage;
