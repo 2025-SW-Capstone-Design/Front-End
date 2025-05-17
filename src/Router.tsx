@@ -89,7 +89,7 @@ const router = createBrowserRouter([
             element: withSuspense(<MeetingPage />),
           },
           {
-            path: 'meeting/:teamName',
+            path: 'meeting/:roomName',
             element: withSuspense(<MeetingViewPage />),
           },
         ],

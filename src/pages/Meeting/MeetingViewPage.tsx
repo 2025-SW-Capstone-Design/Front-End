@@ -9,6 +9,8 @@ import './MeetingViewPage.css';
 import { useEffect, useState } from 'react';
 import VideoComponent from './components/VideoComponent';
 import AudioComponent from './components/AudioComponent';
+import { useParams } from 'react-router-dom';
+import { issuedToken } from '../../apis/meeting/meeting';
 
 type TrackInfo = {
   trackPublication: RemoteTrackPublication;
@@ -16,6 +18,7 @@ type TrackInfo = {
 };
 
 function MeetingViewPage() {
+  const { teamId, roomName } = useParams();
   const [room, setRoom] = useState<Room | undefined>(undefined);
   const [localTrack, setLocalTrack] = useState<LocalVideoTrack | undefined>(
     undefined,
@@ -24,18 +27,29 @@ function MeetingViewPage() {
   const [participantName, setParticipantName] = useState(
     'Participant' + Math.floor(Math.random() * 100),
   );
-  const [roomName, setRoomName] = useState('Test Room');
-
   const [isMicOn, setIsMicOn] = useState(true);
   const [isCameraOn, setIsCameraOn] = useState(true);
   const [isScreenSharing, setIsScreenSharing] = useState(false);
 
   useEffect(() => {
-    const issuedToken = sessionStorage.getItem('issuedToken');
-    if (issuedToken) {
-      joinRoom(issuedToken);
+    if (teamId && roomName) {
+      issuedTokebAboutRoom();
     }
-  }, []);
+  }, [teamId, roomName]);
+
+  const issuedTokebAboutRoom = () => {
+    issuedToken(Number(teamId))
+      .setData({
+        roomName: roomName as string,
+      })
+      .execute()
+      .then((res) => {
+        joinRoom(res.data.token);
+      })
+      .catch((err) => {
+        console.error('Occured Error: ', err);
+      });
+  };
 
   async function joinRoom(token: string) {
     const room = new Room();

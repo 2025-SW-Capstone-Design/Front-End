@@ -16,21 +16,7 @@ const CreateMeetingModal = ({ onClose, teamId }: CreateMeetingModalProps) => {
   };
 
   const generateMeeting = () => {
-    issuedToken(Number(teamId))
-      .setData({
-        roomName: chatRoomName,
-      })
-      .execute()
-      .then((res) => {
-        console.log(res);
-        sessionStorage.setItem('issuedToken', res.data.token);
-        onClose();
-        navigate(`/team/${teamId}/meeting/${res.data.roomName}`);
-      })
-      .catch((err) => {
-        console.error('Occured Error: ', err);
-        onClose();
-      });
+    navigate(`/team/${teamId}/meeting/${chatRoomName}`);
   };
 
   return (
