@@ -58,6 +58,48 @@ const TeamPageMenuWrapper = styled.div`
   padding: 24px 48px 48px 48px;
 `;
 
+const TeamPageContentWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  width: 100%;
+  height: fit-content;
+
+  padding: 0 48px;
+`;
+
+const TeamPageGantt = styled.div`
+  width: 50vw;
+  margin-right: auto;
+`;
+
+const TeamPageTaskList = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-right: auto;
+`;
+
+const TeamPageTaskListTitle = styled.div`
+  font-size: 22px;
+  font-weight: 700;
+`;
+
+const TeamPageTaskListContent = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  width: 29vw;
+  margin-top: 32px;
+
+  height: 50vh + 10vw;
+  gap: 20px;
+
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
 export {
   TeamPageContainer,
   TeamPageHeader,
@@ -66,4 +108,9 @@ export {
   TeamPageHeaderButtonText,
   TeamPageHeaderButtonWrapper,
   TeamPageMenuWrapper,
+  TeamPageContentWrapper,
+  TeamPageGantt,
+  TeamPageTaskList,
+  TeamPageTaskListTitle,
+  TeamPageTaskListContent,
 };

@@ -43,7 +43,7 @@ const CardTitle = styled.div`
 
 const CardDescription = styled.div`
   width: 100%;
-  height: 20px;
+  min-height: 20px;
   color: ${({ theme }) => theme.colors.gray[90]};
   ${({ theme }) => theme.text.bodyM_light};
 
