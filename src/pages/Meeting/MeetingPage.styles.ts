@@ -54,10 +54,25 @@ const MeetingPageHeaderButtonWrapper = styled.div`
   align-self: stretch;
 `;
 
+const MeetingListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 75vh;
+  gap: 12px;
+  padding: 48px;
+
+  overflow-y: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
 export {
   MeetingPageContainer,
   MeetingPageHeader,
   MeetingPageHeaderBack,
   MeetingPageHeaderButtonWrapper,
   MeetingPageHeaderText,
+  MeetingListContainer,
 };

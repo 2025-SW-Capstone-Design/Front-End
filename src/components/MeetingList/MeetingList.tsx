@@ -2,17 +2,27 @@ import React from 'react';
 import * as S from './MeetingList.styles';
 import type { MeetingListProps } from './MeetingList.types';
 import SubButton from '../SubButton/SubButton';
+import { useNavigate } from 'react-router-dom';
 
-function MeetingList({ title, time, width }: MeetingListProps) {
+function MeetingList({ teamId, data, width }: MeetingListProps) {
+  const navigate = useNavigate();
+
   return (
     <S.MeetingListWrapper width={width}>
       <S.MeetingListInfo>
-        <S.MeetingTime>{time}</S.MeetingTime>
-        <S.MeetingTitle>{title}</S.MeetingTitle>
+        <S.MeetingTitle>{data.title}</S.MeetingTitle>
       </S.MeetingListInfo>
       <S.ButtonContainer>
-        <SubButton buttonType="primary">회의록 보기</SubButton>
-        <SubButton buttonType="default">회의 참여하기</SubButton>
+        <SubButton buttonType="primary" disabled={data.active}>
+          회의록 보기
+        </SubButton>
+        <SubButton
+          buttonType="default"
+          disabled={!data.active}
+          onClick={() => navigate(`/team/${teamId}/meeting/${data.title}`)}
+        >
+          회의 참여하기
+        </SubButton>
       </S.ButtonContainer>
     </S.MeetingListWrapper>
   );

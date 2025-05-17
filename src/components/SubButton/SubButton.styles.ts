@@ -3,9 +3,9 @@ import { css } from '@emotion/react';
 import type { SubButtonStylesProps } from './SubButton.types';
 
 const ButtonLayout = css`
-  height: 36px;
   flex-shrink: 0;
-  padding: 8px 12px;
+  height: fit-content;
+  padding: 12px 20px;
   border-radius: 8px;
   text-align: center;
   cursor: pointer;
