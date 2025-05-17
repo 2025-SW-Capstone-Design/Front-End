@@ -34,8 +34,13 @@ const router = createBrowserRouter([
   { path: '/intro', element: withSuspense(<IntroPage />) },
   { path: '/oauth2/redirect', element: <TokenProccesor /> },
   {
-    path: '/',
+    path: '/team/:teamId/meeting/:roomName',
     element: <ProtectedLayout />,
+    children: [{ index: true, element: withSuspense(<MeetingViewPage />) }],
+  },
+  {
+    path: '/',
+    element: <ProtectedLayout type="basic" />,
     children: [
       { index: true, element: withSuspense(<MainPage />) },
       {
@@ -87,10 +92,6 @@ const router = createBrowserRouter([
           {
             path: 'meeting',
             element: withSuspense(<MeetingPage />),
-          },
-          {
-            path: 'meeting/:roomName',
-            element: withSuspense(<MeetingViewPage />),
           },
         ],
       },
