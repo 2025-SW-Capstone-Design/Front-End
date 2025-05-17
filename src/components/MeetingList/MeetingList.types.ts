@@ -1,6 +1,8 @@
+import type { ChatRoomResponse } from '../../apis/meeting/meeting.types';
+
 interface MeetingListProps {
-  time: string;
-  title: string;
+  teamId: string;
+  data: ChatRoomResponse;
   width?: string;
 }
 

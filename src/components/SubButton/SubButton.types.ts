@@ -3,6 +3,7 @@ interface SubButtonProps {
   buttonType: 'primary' | 'default';
   width?: string;
   disabled?: boolean;
+  onClick?: () => void;
 }
 
 interface SubButtonStylesProps {

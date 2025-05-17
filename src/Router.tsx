@@ -22,6 +22,8 @@ const PortfolioModifyPage = lazy(
 );
 const ReadmePage = lazy(() => import('./pages/Readme/ReadmePage'));
 const ReadmeModifyPage = lazy(() => import('./pages/Readme/ReadmeModifyPage'));
+const MeetingPage = lazy(() => import('./pages/Meeting/MeetingPage'));
+const MeetingViewPage = lazy(() => import('./pages/Meeting/MeetingViewPage'));
 
 const withSuspense = (element: React.ReactNode) => (
   <Suspense fallback={<></>}>{element}</Suspense>
@@ -32,8 +34,13 @@ const router = createBrowserRouter([
   { path: '/intro', element: withSuspense(<IntroPage />) },
   { path: '/oauth2/redirect', element: <TokenProccesor /> },
   {
-    path: '/',
+    path: '/team/:teamId/meeting/:roomName',
     element: <ProtectedLayout />,
+    children: [{ index: true, element: withSuspense(<MeetingViewPage />) }],
+  },
+  {
+    path: '/',
+    element: <ProtectedLayout type="basic" />,
     children: [
       { index: true, element: withSuspense(<MainPage />) },
       {
@@ -81,6 +88,10 @@ const router = createBrowserRouter([
           {
             path: 'project/:projectId/readme/edit/:readmeId',
             element: withSuspense(<ReadmeModifyPage />),
+          },
+          {
+            path: 'meeting',
+            element: withSuspense(<MeetingPage />),
           },
         ],
       },
