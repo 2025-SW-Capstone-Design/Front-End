@@ -94,6 +94,89 @@ const ViewMainScreenWrapper = styled.div`
 
   width: 100%;
   height: fit-content;
+  align-items: center;
+  justify-content: center;
+  background-color: ${(props) => props.theme.colors.gray[30]};
+`;
+
+const ViewInfoWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  width: 30%;
+`;
+
+const ViewTeamMembersWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+`;
+
+const ViewTeamMembersHeader = styled.div`
+  display: flex;
+  padding: 20px;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--Gray-20, #eff2f5);
+  background: var(--White, #fff);
+  font-size: 20px;
+  font-weight: 700;
+`;
+
+const ViewTeamMemberList = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+  padding: 12px;
+  background: var(--Gray-20, #eff2f5);
+  min-height: 300px;
+
+  overflow-y: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+const ViewTeamMemberInfo = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  width: 100%;
+  align-items: center;
+
+  text-align: center;
+  img {
+    width: 24px;
+    height: 24px;
+
+    margin-right: 12px;
+  }
+
+  span {
+    font-size: 16px;
+    font-weight: 700;
+  }
+`;
+
+const ViewTeamMemberPosition = styled.div`
+  margin-left: auto;
+`;
+
+const ViewMilestoneList = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+  padding: 12px;
+  background: var(--Gray-20, #eff2f5);
+  min-height: 740px;
+
+  overflow-y: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export {
@@ -106,4 +189,11 @@ export {
   ViewScreenWrapper,
   ViewScreenList,
   ViewMainScreenWrapper,
+  ViewInfoWrapper,
+  ViewTeamMembersWrapper,
+  ViewTeamMembersHeader,
+  ViewTeamMemberList,
+  ViewTeamMemberInfo,
+  ViewTeamMemberPosition,
+  ViewMilestoneList,
 };

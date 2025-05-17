@@ -19,6 +19,13 @@ import {
 } from '../../apis/meeting/meeting';
 import { useApiQuery } from '../../apis/config/builder/ApiBuilder';
 import { getMemberDetail } from '../../apis/member/member';
+import MemberIcon from '../../assets/icon/avatar.svg';
+import Label from '../../components/Label/Label';
+import type { PositionType } from '../../components/Label/Label.types';
+import { getMilesotnes } from '../../apis/milestone/milestone';
+import * as C from '../../components/Card/Card.styles';
+import AvatarGroup from '../../components/AvatarGroup/AvatarGroup';
+import { formatKoreanDateTime } from '../../utils/formatter/timeFomatter';
 
 // 타입 정의
 type TrackInfo = {
@@ -29,6 +36,7 @@ type TrackInfo = {
 const MeetingViewPage = () => {
   const navigate = useNavigate();
   const { teamId, roomName } = useParams();
+  const [openMilestoneId, setOpenMilestoneId] = useState<number | null>(null);
   const [chatRoomId, setChatRoomId] = useState<number>();
   const [room, setRoom] = useState<Room | undefined>(undefined);
   const [localTrack, setLocalTrack] = useState<LocalVideoTrack | undefined>(
@@ -47,6 +55,10 @@ const MeetingViewPage = () => {
 
   const { data: chatRooms } = useApiQuery(getChatRooms(Number(teamId)), [
     'chatRooms',
+    teamId,
+  ]);
+  const { data: milestones } = useApiQuery(getMilesotnes(Number(teamId)), [
+    'milestones',
     teamId,
   ]);
   const { data: chatRoomMembers } = useApiQuery(
@@ -273,6 +285,17 @@ const MeetingViewPage = () => {
     );
   };
 
+  const selectedStatus = (status: string) => {
+    switch (status) {
+      case 'NOT_STARTED':
+        return '진행전';
+      case 'IN_PROGRESS':
+        return '진행중';
+      case 'DONE':
+        return '완료';
+    }
+  };
+
   return (
     <S.ViewContainer>
       <S.ViewHeader>
@@ -303,6 +326,74 @@ const MeetingViewPage = () => {
             )}
           </S.ViewMainScreenWrapper>
         </S.ViewScreenWrapper>
+        <S.ViewInfoWrapper>
+          <S.ViewTeamMembersWrapper>
+            <S.ViewTeamMembersHeader>팀원 목록</S.ViewTeamMembersHeader>
+            <S.ViewTeamMemberList>
+              {chatRoomMembers?.map((member) => (
+                <S.ViewTeamMemberInfo key={member.memberId}>
+                  <img src={MemberIcon} alt="memberIcon" />
+                  <span>{member?.nickname}</span>
+                  <S.ViewTeamMemberPosition>
+                    <Label position={member?.position as PositionType} />
+                  </S.ViewTeamMemberPosition>
+                </S.ViewTeamMemberInfo>
+              ))}
+            </S.ViewTeamMemberList>
+          </S.ViewTeamMembersWrapper>
+          <S.ViewTeamMembersHeader>마일스톤 현황</S.ViewTeamMembersHeader>
+          <S.ViewMilestoneList>
+            {milestones?.map((milestone) => {
+              const isCardOpen = openMilestoneId === milestone.milestoneId;
+
+              return (
+                <C.CardContainer
+                  key={milestone.milestoneId}
+                  onClick={() =>
+                    setOpenMilestoneId(
+                      isCardOpen ? null : milestone.milestoneId,
+                    )
+                  }
+                >
+                  <C.CardHeader>
+                    <C.CardStatus>
+                      {selectedStatus(milestone.status)}
+                    </C.CardStatus>
+                    <C.CardTitle>{milestone.title}</C.CardTitle>
+                  </C.CardHeader>
+                  {isCardOpen && (
+                    <>
+                      <C.CardDescription>
+                        {milestone.description}
+                      </C.CardDescription>
+                      <C.CardFooter>
+                        <C.MemberAvatars>
+                          <AvatarGroup
+                            members={[
+                              {
+                                name: milestone.creator,
+                              },
+                            ]}
+                          />
+                        </C.MemberAvatars>
+                        <C.DueDate>
+                          <C.Date>
+                            {'시작일: ' +
+                              formatKoreanDateTime(milestone.startDate)}
+                          </C.Date>
+                          <C.Date>
+                            {'마감일: ' +
+                              formatKoreanDateTime(milestone.dueDate)}
+                          </C.Date>
+                        </C.DueDate>
+                      </C.CardFooter>
+                    </>
+                  )}
+                </C.CardContainer>
+              );
+            })}
+          </S.ViewMilestoneList>
+        </S.ViewInfoWrapper>
       </S.ViewWrapper>
     </S.ViewContainer>
   );

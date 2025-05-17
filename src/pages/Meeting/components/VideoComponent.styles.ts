@@ -20,7 +20,7 @@ const VideoContent = styled.video`
 `;
 
 const VideoFullContent = styled.video`
-  width: fit-content;
+  width: 100%;
   height: 63vh;
   border-radius: 16px;
   object-fit: fill;
