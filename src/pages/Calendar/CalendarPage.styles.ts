@@ -55,10 +55,25 @@ const CalendarHeaderButtonWrapper = styled.div`
   align-self: stretch;
 `;
 
+const CalendarMainContent = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  padding: 24px 0px;
+`;
+
+const CalendarMainContentText = styled.div`
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 24px;
+`;
+
 export {
   CalendarContainer,
   CalendarHeader,
   CalendarHeaderBack,
   CalendarHeaderTeamName,
   CalendarHeaderButtonWrapper,
+  CalendarMainContent,
+  CalendarMainContentText,
 };

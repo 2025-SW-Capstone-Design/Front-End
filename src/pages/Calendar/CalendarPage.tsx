@@ -9,6 +9,9 @@ import { useNavigate } from 'react-router-dom';
 import IconButton from '../../components/IconButton/IconButton';
 import TaskSettingModal from '../../components/TaskSettingModal/TaskSettingModal';
 import Button from '../../components/Button/Button';
+import { useApiQuery } from '../../apis/config/builder/ApiBuilder';
+import { getMilesotnes } from '../../apis/milestone/milestone';
+import MilestoneCalendar from '../../components/MilestoneCalendar/MilestoneCalendar';
 
 const CalendarPage = () => {
   const currentTeam = useCurrentTeam();
@@ -16,6 +19,11 @@ const CalendarPage = () => {
 
   const [isOpenTaskModal, setIsOpenTaskModal] = useState(false);
   const [isOpenTaskTemplateModal, setIsOpenTaskTemplateModal] = useState(false);
+
+  const { data: milestones } = useApiQuery(
+    getMilesotnes(currentTeam?.id as number),
+    ['milestones', currentTeam?.id],
+  );
 
   const handleOpenModal = (type: 'task' | 'template') => {
     type === 'task'
@@ -83,6 +91,10 @@ const CalendarPage = () => {
               Task 생성
             </IconButton>
           </S.CalendarHeaderButtonWrapper>
+          <S.CalendarMainContent>
+            <S.CalendarMainContentText>캘린더</S.CalendarMainContentText>
+            <MilestoneCalendar milestones={milestones || []} />
+          </S.CalendarMainContent>
         </S.CalendarHeader>
       </S.CalendarContainer>
     </>

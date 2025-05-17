@@ -39,10 +39,16 @@ interface MilestoneUpdateStatusRequest {
   status: string;
 }
 
+interface MilestoneDeadlineRespone {
+  milestone: MilestoneDetailResponse;
+  issues: IssueResponse[];
+}
+
 export {
   MilestoneUpdateRequest,
   MilestoneCreateRequest,
   MilestoneResponse,
   MilestoneDetailResponse,
   MilestoneUpdateStatusRequest,
+  MilestoneDeadlineRespone,
 };

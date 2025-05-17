@@ -16,6 +16,13 @@ import ManageTeamModal from '../../components/ManageTeamModal/ManageTeamModal';
 import type { teamMemberInfo } from '../../apis/teamMember/teamMember.types';
 import Menu from '../../components/Menu/Menu';
 import TaskLabelModal from '../../components/TaskLabelModal/TaskLabelModal';
+import GanttChart from '../../components/MilestoneGantt/GanttChart';
+import { useApiQuery } from '../../apis/config/builder/ApiBuilder';
+import {
+  getDeadlineMilstone,
+  getMilesotnes,
+} from '../../apis/milestone/milestone';
+import UpcomingTask from '../../components/UpcomingTask/UpcomingTask';
 
 const TeamPage = () => {
   const currentTeam = useCurrentTeam();
@@ -25,6 +32,16 @@ const TeamPage = () => {
   const [teamMemberInfoList, setTeamMemberInfoList] = useState<
     teamMemberInfo[]
   >([]);
+
+  const { data: milestones } = useApiQuery(
+    getMilesotnes(Number(currentTeam?.id)),
+    ['milestones', currentTeam?.id],
+  );
+
+  const { data: deadlineMilestone } = useApiQuery(
+    getDeadlineMilstone(Number(currentTeam?.id)),
+    ['deadlineMilestones', currentTeam?.id],
+  );
 
   const fetchTeamMembers = async () => {
     if (currentTeam?.id) {
@@ -52,6 +69,8 @@ const TeamPage = () => {
   const handleTaskModal = () => {
     setIsOpenTaskModal(!isOpenTaskModal);
   };
+
+  console.log(deadlineMilestone);
 
   return (
     <>
@@ -106,7 +125,7 @@ const TeamPage = () => {
           <Menu
             title="캘린더"
             icon={MeetingIcon}
-            subTitle="일정을 간트차트로 확인해봐요!"
+            subTitle="일정을 캘린더로 확인해봐요!"
             route={`/team/${currentTeam?.id}/calendar`}
             buttonText="확인하기"
           />
@@ -120,7 +139,7 @@ const TeamPage = () => {
           <Menu
             title="미팅"
             icon={MeetingIcon}
-            subTitle="Task 상태를 관리하고 진행 상황을 확인해봐요!"
+            subTitle="실시간으로 소통하고 회의를 진행하봐요."
             route={`/team/${currentTeam?.id}/meeting`}
             buttonText="확인하기"
           />
@@ -132,6 +151,31 @@ const TeamPage = () => {
             buttonText="확인하기"
           />
         </S.TeamPageMenuWrapper>
+        <S.TeamPageContentWrapper>
+          <S.TeamPageGantt>
+            <GanttChart milestones={milestones || []} />
+          </S.TeamPageGantt>
+          <S.TeamPageTaskList>
+            <S.TeamPageTaskListTitle>
+              마감이 다가오는 Task
+            </S.TeamPageTaskListTitle>
+            <S.TeamPageTaskListContent>
+              {deadlineMilestone?.length ? (
+                deadlineMilestone.map(({ milestone, issues }) =>
+                  issues.map((issue) => (
+                    <UpcomingTask
+                      key={issue.issueId}
+                      issue={issue}
+                      dueDate={milestone?.dueDate}
+                    />
+                  )),
+                )
+              ) : (
+                <p>마감이 임박한 Task가 없습니다.</p>
+              )}
+            </S.TeamPageTaskListContent>
+          </S.TeamPageTaskList>
+        </S.TeamPageContentWrapper>
       </S.TeamPageContainer>
     </>
   );

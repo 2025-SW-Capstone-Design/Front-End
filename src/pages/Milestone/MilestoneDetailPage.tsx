@@ -87,7 +87,7 @@ const MilestoneDetailPage = () => {
       )}
       <S.MilestoneContainer>
         <S.MilestoneHeader>
-          <S.MilestoneHeaderBack>
+          <S.MilestoneHeaderBack onClick={() => navigate(-1)}>
             <img src={BackIcon} alt="back" />
             돌아가기
           </S.MilestoneHeaderBack>
