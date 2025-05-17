@@ -1,8 +1,8 @@
-interface UpcomingTaskCardProps {
-  status: '긴급' | '적정' | '보통';
-  //   taskName: string;
-  //   deadlineDay: string;
-  //   deadlineTime: string;
+import type { IssueResponse } from '../../apis/task/task.types';
+
+interface UpcomingTaskProps {
+  issue: IssueResponse;
+  dueDate: string;
 }
 
-export { UpcomingTaskCardProps };
+export { UpcomingTaskProps };
