@@ -1,6 +1,7 @@
 import ApiBuilder from '../config/builder/ApiBuilder';
 import type {
   MilestoneCreateRequest,
+  MilestoneDeadlineRespone,
   MilestoneDetailResponse,
   MilestoneResponse,
   MilestoneUpdateRequest,
@@ -29,6 +30,7 @@ const END_POINT = {
     milestoneId: number,
   ) =>
     `${BASE_ENDPOINT(teamId)}/projects/${projectId}/milestones/${milestoneId}/status`,
+  GET_DEADLINE: (teamId: number) => `/api/v1/teams/${teamId}/milestones`,
 };
 
 const updateMilestone = (
@@ -75,6 +77,12 @@ const updateMilestoneStatus = (
   ).setMethod('PATCH');
 };
 
+const getDeadlineMilstone = (teamId: number) => {
+  return ApiBuilder.create<void, MilestoneDeadlineRespone[]>(
+    END_POINT.GET_DEADLINE(teamId),
+  ).setMethod('GET');
+};
+
 export {
   updateMilestone,
   getMilesotnes,
@@ -82,4 +90,5 @@ export {
   getMilestoneDetail,
   createMilestone,
   updateMilestoneStatus,
+  getDeadlineMilstone,
 };
