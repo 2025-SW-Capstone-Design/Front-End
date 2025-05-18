@@ -1,12 +1,11 @@
 import styled from '@emotion/styled';
 
 const MeetingCardWrapper = styled.div`
-  width: 364px;
-  height: 240px;
-  padding: 16px;
+  width: 100%;
+  padding: 20px 16px;
   border-radius: 8px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 12px;
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.08);
   background-color: ${({ theme }) => theme.colors.gray[10]};

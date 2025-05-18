@@ -151,9 +151,10 @@ const MilestoneDetailPage = () => {
               <S.MilestoneTaskPreviewer data-color-mode="lightgray">
                 <MDEditor.Markdown
                   style={{
-                    height: '94%',
+                    height: '100%',
                     padding: '24px',
                     lineHeight: '1.6',
+                    overflowY: 'auto',
                   }}
                   source={markdown}
                 />
