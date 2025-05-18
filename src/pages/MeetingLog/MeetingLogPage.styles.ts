@@ -63,6 +63,7 @@ const MeetingLogContentWrapper = styled.div`
   height: calc(100vh - 108px);
 
   padding: 24px 48px 0px 48px;
+  height: 80vh;
 `;
 
 const MeetingLogContentTopText = styled.div`
@@ -80,13 +81,17 @@ const MeetingLogContentTopText = styled.div`
 const MeetingLogListWrapper = styled.div`
   display: flex;
   flex-direction: row;
-
   padding-top: 40px;
 
   width: 100%;
   flex-wrap: wrap;
 
   gap: 30px;
+
+  overflow-y: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export {
