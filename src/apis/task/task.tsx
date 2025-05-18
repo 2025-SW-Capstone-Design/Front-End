@@ -12,7 +12,7 @@ const END_POINT = {
   TASK_UPDATE: (teamId: number, issueId: number) =>
     `/api/v1/teams/${teamId}/issues/${issueId}`,
   TASK_UPDATE_STATUS: (teamId: number, issueId: number) =>
-    `/api/v1/teams/${teamId}/issues/${issueId}/closed`,
+    `/api/v1/teams/${teamId}/issues/${issueId}/status`,
   TASK_DETAIL: (teamId: number, projectId: number, issueId: number) =>
     `/api/v1/teams/${teamId}/projects/${projectId}/issues/${issueId}`,
 };

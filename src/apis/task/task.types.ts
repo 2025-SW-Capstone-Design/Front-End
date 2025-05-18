@@ -34,6 +34,8 @@ interface IssueUpdateRequest {
 interface IssueClosedRequest {
   organizationName: string;
   repositoryName: string;
+  status: string;
+  labels: string[];
 }
 
 interface IssueDetailResponse {
