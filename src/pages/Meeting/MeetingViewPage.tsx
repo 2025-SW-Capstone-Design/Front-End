@@ -26,6 +26,7 @@ import { getMilesotnes } from '../../apis/milestone/milestone';
 import * as C from '../../components/Card/Card.styles';
 import AvatarGroup from '../../components/AvatarGroup/AvatarGroup';
 import { formatKoreanDateTime } from '../../utils/formatter/timeFomatter';
+import type { ChatRoomMemberResponse } from '../../apis/meeting/meeting.types';
 
 // 타입 정의
 type TrackInfo = {
@@ -36,6 +37,10 @@ type TrackInfo = {
 const MeetingViewPage = () => {
   const navigate = useNavigate();
   const { teamId, roomName } = useParams();
+
+  const [chatRoomMembers, setChatRoomMembers] = useState<
+    ChatRoomMemberResponse[]
+  >([]);
   const [openMilestoneId, setOpenMilestoneId] = useState<number | null>(null);
   const [chatRoomId, setChatRoomId] = useState<number>();
   const [room, setRoom] = useState<Room | undefined>(undefined);
@@ -53,19 +58,35 @@ const MeetingViewPage = () => {
     isScreenSharing: false,
   });
 
-  const { data: chatRooms } = useApiQuery(getChatRooms(Number(teamId)), [
-    'chatRooms',
-    teamId,
-  ]);
+  const { data: chatRooms, refetch: refetchChatRooms } = useApiQuery(
+    getChatRooms(Number(teamId)),
+    ['chatRooms', teamId],
+  );
   const { data: milestones } = useApiQuery(getMilesotnes(Number(teamId)), [
     'milestones',
     teamId,
   ]);
-  const { data: chatRoomMembers } = useApiQuery(
-    getChatRoomMember(Number(teamId), chatRoomId as number),
-    ['chatRoomMembers', teamId, chatRoomId],
-  );
+
+  const fetchChatRoomMembers = () => {
+    if (teamId && chatRoomId) {
+      getChatRoomMember(Number(teamId), chatRoomId as number)
+        .execute()
+        .then((res) => {
+          setChatRoomMembers(res.data);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  };
+
   const { data: member } = useApiQuery(getMemberDetail(), ['member']);
+
+  useEffect(() => {
+    if (teamId && chatRoomId != null) {
+      fetchChatRoomMembers();
+    }
+  }, [teamId, chatRoomId, remoteTracks]);
 
   useEffect(() => {
     if (chatRooms && roomName) {
@@ -131,11 +152,8 @@ const MeetingViewPage = () => {
             participantIdentity: member?.nickname as string,
           });
         }
+        fetchChatRoomMembers();
       } catch (error) {
-        console.log(
-          'There was an error connecting to the room:',
-          (error as Error).message,
-        );
         await leaveRoom();
       }
     },
@@ -151,6 +169,7 @@ const MeetingViewPage = () => {
         .execute();
 
       await connectToRoom(response.data.token);
+      refetchChatRooms();
     } catch (err) {
       console.error('Error fetching token:', err);
     }
