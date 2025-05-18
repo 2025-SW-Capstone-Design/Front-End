@@ -63,7 +63,7 @@ const MeetingLogModal = ({
               <S.ModalSubTitle>
                 {type === 'Edit'
                   ? '회의록을 수정 해보세요'
-                  : '회의록를 조회 해보세요'}
+                  : '회의록을 조회 해보세요'}
               </S.ModalSubTitle>
             </S.ModalHeader>
             <S.ModalContent>
