@@ -10,12 +10,12 @@ function MeetingList({ teamId, data, width }: MeetingListProps) {
   return (
     <S.MeetingListWrapper width={width}>
       <S.MeetingListInfo>
-        <S.MeetingTitle>{data.title}</S.MeetingTitle>
+        <S.MeetingTitle>
+          {data.title}
+          <span>{!data.active && ' - (종료된 회의)'}</span>
+        </S.MeetingTitle>
       </S.MeetingListInfo>
       <S.ButtonContainer>
-        <SubButton buttonType="primary" disabled={data.active}>
-          회의록 보기
-        </SubButton>
         <SubButton
           buttonType="default"
           disabled={!data.active}
