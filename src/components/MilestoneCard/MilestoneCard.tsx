@@ -27,8 +27,6 @@ function MilestoneCard({
         return '완료';
     }
   };
-
-  console.log('isSelectedProjectId', isSelectedProjectId);
   return (
     <S.MilestoneCardWrapper>
       <S.MilestoneCardHeader>
