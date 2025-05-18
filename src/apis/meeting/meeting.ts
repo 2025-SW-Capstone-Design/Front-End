@@ -2,6 +2,7 @@ import ApiBuilder from '../config/builder/ApiBuilder';
 import type {
   ChatRoomMemberResponse,
   ChatRoomResponse,
+  ConnectVoiceRequest,
   IssuedTokenRequest,
   IssuedTokenResponse,
   SendVoiceDataRequest,
@@ -16,6 +17,7 @@ const END_POINT = {
     `/api/v1/teams/${teamId}/chat-rooms/${chatRoomId}/members`,
   JOIN_MEETING: (teamId: number, chatRoomId: number) =>
     `/api/v1/teams/${teamId}/chat-rooms/${chatRoomId}/members`,
+  CONNECT_VOICE: () => `/api/v1/open-vidu/startCompositeEgress`,
 };
 
 const issuedToken = (teamId: number) => {
@@ -48,10 +50,17 @@ const joinChatRoomMember = (teamId: number, chatRoomId: number) => {
   ).setMethod('POST');
 };
 
+const connectVoice = () => {
+  return ApiBuilder.create<ConnectVoiceRequest, void>(
+    END_POINT.CONNECT_VOICE(),
+  ).setMethod('POST');
+};
+
 export {
   issuedToken,
   getChatRooms,
   sendVoiceData,
   getChatRoomMember,
   joinChatRoomMember,
+  connectVoice,
 };

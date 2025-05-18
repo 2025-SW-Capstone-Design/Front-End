@@ -28,10 +28,17 @@ interface ChatRoomMemberResponse {
   profileImageURL: string;
 }
 
+interface ConnectVoiceRequest {
+  roomName: string;
+  teamId: string;
+  memberId: string;
+}
+
 export {
   IssuedTokenRequest,
   IssuedTokenResponse,
   ChatRoomResponse,
   SendVoiceDataRequest,
   ChatRoomMemberResponse,
+  ConnectVoiceRequest,
 };

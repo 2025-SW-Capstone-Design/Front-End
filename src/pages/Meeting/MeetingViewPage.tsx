@@ -13,6 +13,7 @@ import VideoComponent from './components/VideoComponent';
 import AudioComponent from './components/AudioComponent';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
+  connectVoice,
   getChatRoomMember,
   getChatRooms,
   issuedToken,
@@ -97,6 +98,24 @@ const MeetingViewPage = () => {
       }
     }
   }, [chatRooms, roomName]);
+
+  useEffect(() => {
+    if (room && roomName && teamId && member?.id) {
+      connectVoice()
+        .setData({
+          roomName,
+          teamId,
+          memberId: member?.id.toString() as string,
+        })
+        .execute()
+        .then(() => {
+          console.log('Connect');
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }, [room, roomName, teamId, member?.id]);
 
   const handleTrackSubscribed = useCallback(
     (
