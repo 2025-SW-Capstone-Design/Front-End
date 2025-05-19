@@ -76,7 +76,7 @@ const TaskPage = () => {
     setTitle(e.target.value);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!teamId || !projectId || !milestoneId) return;
     if (task && labels.length === 0) {
       alert('라벨을 1개 이상 선택해주세요.');
@@ -93,22 +93,29 @@ const TaskPage = () => {
       milestoneId: Number(milestoneId),
     };
 
-    if (task && taskId) {
-      const data = task as IssueDetailResponse;
-      updateTask(+teamId, +taskId)
-        .setData({
-          ...commonData,
-          state: data.issueDetail.status === 'open' ? 'OPEN' : 'CLOSED',
-          teamMemberId: data.teamMemberId,
-        })
-        .execute();
-    } else {
-      createTask(+teamId, +projectId).setData(commonData).execute();
-    }
+    try {
+      if (task && taskId) {
+        const data = task as IssueDetailResponse;
+        await updateTask(+teamId, +taskId)
+          .setData({
+            ...commonData,
+            state: data.issueDetail.status === 'open' ? 'OPEN' : 'CLOSED',
+            teamMemberId: data.teamMemberId,
+          })
+          .execute();
+        alert('Task가 성공적으로 수정되었습니다.');
+      } else {
+        await createTask(+teamId, +projectId).setData(commonData).execute();
+        alert('Task가 성공적으로 생성되었습니다.');
+      }
 
-    resetSelectedLabels();
-    invalidateQueriesAfterSave();
-    navigate(`/team/${teamId}/calendar`);
+      resetSelectedLabels();
+      invalidateQueriesAfterSave();
+      navigate(`/team/${teamId}/project/${projectId}/milestone/${milestoneId}`);
+    } catch (error) {
+      console.error('Failed to save task:', error);
+      alert('작업 중 오류가 발생했습니다.');
+    }
   };
 
   const invalidateQueriesAfterSave = () => {

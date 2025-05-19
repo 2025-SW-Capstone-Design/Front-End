@@ -93,7 +93,9 @@ const MilestoneDetailPage = () => {
 
       <S.MilestoneContainer>
         <S.MilestoneHeader>
-          <S.MilestoneHeaderBack onClick={() => navigate(-1)}>
+          <S.MilestoneHeaderBack
+            onClick={() => navigate(`/team/${teamId}/kanban`)}
+          >
             <img src={BackIcon} alt="back" />
             돌아가기
           </S.MilestoneHeaderBack>
