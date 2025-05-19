@@ -25,6 +25,8 @@ const ReadmeModifyPage = lazy(() => import('./pages/Readme/ReadmeModifyPage'));
 const MeetingPage = lazy(() => import('./pages/Meeting/MeetingPage'));
 const MeetingViewPage = lazy(() => import('./pages/Meeting/MeetingViewPage'));
 
+const MeetingLogPage = lazy(() => import('./pages/MeetingLog/MeetingLogPage'));
+
 const withSuspense = (element: React.ReactNode) => (
   <Suspense fallback={<></>}>{element}</Suspense>
 );
@@ -92,6 +94,10 @@ const router = createBrowserRouter([
           {
             path: 'meeting',
             element: withSuspense(<MeetingPage />),
+          },
+          {
+            path: 'meeting-log',
+            element: withSuspense(<MeetingLogPage />),
           },
         ],
       },

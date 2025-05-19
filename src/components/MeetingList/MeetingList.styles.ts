@@ -34,6 +34,11 @@ const MeetingTitle = styled.div`
   color: black;
   font-size: 24px;
   font-weight: 700;
+
+  span {
+    font-size: 18px;
+    color: ${(props) => props.theme.colors.gray[70]};
+  }
 `;
 
 const ButtonContainer = styled.div`
