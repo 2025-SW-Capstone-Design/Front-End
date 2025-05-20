@@ -24,6 +24,7 @@ function CreateTeamModal({ onClose }: CreateTeamModalProps) {
   const [name, setName] = useState('');
   const [organizationName, setOrganizationName] = useState('');
   const [description, setDescription] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // ✅ 로딩 상태
 
   const {
     emails,
@@ -46,6 +47,7 @@ function CreateTeamModal({ onClose }: CreateTeamModalProps) {
             await sendTeamInvitationEmail(teamId).setData({ emails }).execute();
           }
           await queryClient.invalidateQueries({ queryKey: ['teams'] });
+          alert('팀 생성이 성공적으로 완료되었습니다.');
           onClose();
           navigate(`/team/${teamId}`);
         } catch (err) {
@@ -56,11 +58,19 @@ function CreateTeamModal({ onClose }: CreateTeamModalProps) {
   );
 
   const handleCreateTeam = () => {
-    createTeamMutation.mutate({
-      name,
-      organizationName,
-      description,
-    });
+    setIsLoading(true); // ✅ 로딩 시작
+    createTeamMutation.mutate(
+      {
+        name,
+        organizationName,
+        description,
+      },
+      {
+        onSettled: () => {
+          setIsLoading(false); // ✅ 로딩 종료
+        },
+      },
+    );
   };
 
   return (
@@ -126,15 +136,21 @@ function CreateTeamModal({ onClose }: CreateTeamModalProps) {
             </S.InputContainer>
           </S.ModalContent>
           <S.ModalFooter>
-            <Button buttonType="soft" width="120px" onClick={onClose}>
+            <Button
+              buttonType="soft"
+              width="120px"
+              onClick={onClose}
+              disabled={isLoading}
+            >
               취소
             </Button>
             <IconButton
               buttonType="primary"
               width="120px"
               onClick={handleCreateTeam}
+              disabled={isLoading}
             >
-              팀 생성하기
+              {isLoading ? '생성 중...' : '팀 생성하기'}
             </IconButton>
           </S.ModalFooter>
         </S.ModalWrapper>

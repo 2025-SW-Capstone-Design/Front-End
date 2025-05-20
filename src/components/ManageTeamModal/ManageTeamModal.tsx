@@ -67,9 +67,19 @@ function ManageTeamModal({
       onClose();
       return;
     }
-    await generateInvitationCode(Number(teamId)).execute();
-    await sendTeamInvitationEmail(Number(teamId)).setData({ emails }).execute();
-    onClose();
+
+    try {
+      await generateInvitationCode(Number(teamId)).execute();
+      await sendTeamInvitationEmail(Number(teamId))
+        .setData({ emails })
+        .execute();
+      alert('초대 이메일이 성공적으로 전송되었습니다.');
+    } catch (err) {
+      console.error('Failed to send invitation emails:', err);
+      alert('초대 이메일 전송에 실패했습니다.');
+    } finally {
+      onClose();
+    }
   };
 
   return (
